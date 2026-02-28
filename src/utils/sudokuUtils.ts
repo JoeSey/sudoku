@@ -62,3 +62,38 @@ export const areIdenticalValue = (val1: number | null, val2: number | null): boo
   return val1 !== null && val1 === val2;
 };
 
+export const getConflicts = (grid: Cell[], index: number): number[] => {
+  const val = grid[index].value;
+  if (val === null) return [];
+
+  const conflicts: number[] = [];
+  const r = Math.floor(index / 9);
+  const c = index % 9;
+  const b = Math.floor(r / 3) * 3 + Math.floor(c / 3);
+
+  for (let i = 0; i < 81; i++) {
+    if (i === index) continue;
+    if (grid[i].value === val) {
+      const r2 = Math.floor(i / 9);
+      const c2 = i % 9;
+      const b2 = Math.floor(r2 / 3) * 3 + Math.floor(c2 / 3);
+      if (r === r2 || c === c2 || b === b2) {
+        conflicts.push(i);
+      }
+    }
+  }
+  return conflicts;
+};
+
+export const getAllConflicts = (grid: Cell[]): number[] => {
+  const conflicts = new Set<number>();
+  for (let i = 0; i < 81; i++) {
+    const cellConflicts = getConflicts(grid, i);
+    if (cellConflicts.length > 0) {
+      conflicts.add(i);
+      cellConflicts.forEach((idx) => conflicts.add(idx));
+    }
+  }
+  return Array.from(conflicts);
+};
+

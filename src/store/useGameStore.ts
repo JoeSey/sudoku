@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { GameState, Cell, Difficulty } from '../types';
-import { generateNewPuzzle, checkBoardValidity } from '../utils/sudokuUtils';
+import { generateNewPuzzle, checkBoardValidity, getAllConflicts } from '../utils/sudokuUtils';
 
 const createEmptyGrid = (): Cell[] => 
   Array.from({ length: 81 }, () => ({
@@ -15,12 +15,17 @@ export const useGameStore = create<GameState>()(
     grid: createEmptyGrid(),
     difficulty: 'medium',
     selectedCellIndex: null,
+    settings: {
+      instantFeedback: true,
+    },
+    conflicts: [],
 
     initGame: (difficulty: Difficulty) => {
       set((state) => {
         state.difficulty = difficulty;
         state.grid = generateNewPuzzle(difficulty);
         state.selectedCellIndex = null;
+        state.conflicts = [];
       });
     },
 
@@ -30,6 +35,10 @@ export const useGameStore = create<GameState>()(
           state.grid[index].value = value;
           // Clear notes when setting a value
           state.grid[index].notes = [];
+          
+          if (state.settings.instantFeedback) {
+            state.conflicts = getAllConflicts(state.grid);
+          }
         }
       });
     },
@@ -51,6 +60,12 @@ export const useGameStore = create<GameState>()(
     validateGrid: () => {
       const { grid } = get();
       return checkBoardValidity(grid);
+    },
+
+    checkConflicts: () => {
+      set((state) => {
+        state.conflicts = getAllConflicts(state.grid);
+      });
     },
 
     setSelectedCellIndex: (index: number | null) => {
@@ -97,6 +112,7 @@ export const useGameStore = create<GameState>()(
             cell.notes = [];
           }
         });
+        state.conflicts = [];
       });
     },
   }))
