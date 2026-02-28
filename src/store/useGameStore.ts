@@ -14,7 +14,8 @@ export const useGameStore = create<GameState>()(
   immer((set, get) => ({
     grid: createEmptyGrid(),
     difficulty: 'medium',
-    selectedCellIndex: null,
+    selectedIndices: [],
+    primaryIndex: null,
     isNoteMode: false,
     settings: {
       instantFeedback: true,
@@ -25,7 +26,8 @@ export const useGameStore = create<GameState>()(
       set((state) => {
         state.difficulty = difficulty;
         state.grid = generateNewPuzzle(difficulty);
-        state.selectedCellIndex = null;
+        state.selectedIndices = [];
+        state.primaryIndex = null;
         state.isNoteMode = false;
         state.conflicts = [];
       });
@@ -100,18 +102,19 @@ export const useGameStore = create<GameState>()(
       });
     },
 
-    setSelectedCellIndex: (index: number | null) => {
+    setSelection: (indices: number[], primary?: number | null) => {
       set((state) => {
-        state.selectedCellIndex = index;
+        state.selectedIndices = indices;
+        state.primaryIndex = primary !== undefined ? primary : (indices.length > 0 ? indices[indices.length - 1] : null);
       });
     },
 
     moveSelection: (direction: 'up' | 'down' | 'left' | 'right') => {
-      const { selectedCellIndex } = get();
-      if (selectedCellIndex === null) return;
+      const { primaryIndex } = get();
+      if (primaryIndex === null) return;
 
-      const row = Math.floor(selectedCellIndex / 9);
-      const col = selectedCellIndex % 9;
+      const row = Math.floor(primaryIndex / 9);
+      const col = primaryIndex % 9;
 
       let newRow = row;
       let newCol = col;
@@ -131,8 +134,10 @@ export const useGameStore = create<GameState>()(
           break;
       }
 
+      const newIndex = newRow * 9 + newCol;
       set((state) => {
-        state.selectedCellIndex = newRow * 9 + newCol;
+        state.selectedIndices = [newIndex];
+        state.primaryIndex = newIndex;
       });
     },
 

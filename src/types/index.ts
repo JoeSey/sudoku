@@ -13,7 +13,8 @@ export interface GameSettings {
 export interface GameState {
   grid: Cell[];
   difficulty: Difficulty;
-  selectedCellIndex: number | null;
+  selectedIndices: number[];
+  primaryIndex: number | null;
   isNoteMode: boolean;
   settings: GameSettings;
   conflicts: number[];
@@ -22,7 +23,7 @@ export interface GameState {
   toggleNote: (index: number, note: number) => void;
   toggleNoteMode: () => void;
   validateGrid: () => boolean;
-  setSelectedCellIndex: (index: number | null) => void;
+  setSelection: (indices: number[], primary?: number | null) => void;
   moveSelection: (direction: 'up' | 'down' | 'left' | 'right') => void;
   resetGame: () => void;
   checkConflicts: () => void;
