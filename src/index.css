@@ -97,6 +97,10 @@ h1 {
   background-color: rgba(59, 130, 246, 0.25); /* slightly darker blue */
 }
 
+.sudoku-cell.conflict {
+  color: #ef4444 !important;
+}
+
 /* Thick borders for 3x3 blocks */
 /* Vertical */
 .sudoku-cell:nth-child(3n):not(:nth-child(9n)) {

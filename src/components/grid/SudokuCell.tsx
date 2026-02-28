@@ -10,6 +10,7 @@ interface SudokuCellProps {
 export const SudokuCell: React.FC<SudokuCellProps> = ({ index }) => {
   const cell = useGameStore((state) => state.grid[index]);
   const isSelected = useGameStore((state) => state.selectedCellIndex === index);
+  const isConflicting = useGameStore((state) => state.conflicts.includes(index));
   const isRelated = useGameStore((state) => 
     state.selectedCellIndex !== null && areRelated(state.selectedCellIndex, index)
   );
@@ -41,6 +42,7 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index }) => {
         'selected': isSelected,
         'highlight-related': isRelated,
         'highlight-identical': isIdentical,
+        'conflict': isConflicting,
       })}
       tabIndex={isSelected ? 0 : index === 0 && !useGameStore.getState().selectedCellIndex ? 0 : -1}
       onClick={handleClick}
