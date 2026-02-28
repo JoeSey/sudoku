@@ -3,9 +3,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: #1a1a1a;
+  background-color: #f9fafb;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -22,7 +22,75 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  justify-content: center;
+  align-items: flex-start;
   min-width: 320px;
   min-height: 100vh;
+  padding-top: 2rem;
+}
+
+.App {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 1rem;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: #374151;
+}
+
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 45px);
+  grid-template-rows: repeat(9, 45px);
+  border: 2.5px solid #1a1a1a;
+  width: fit-content;
+  margin: 2rem auto;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+}
+
+.sudoku-cell {
+  width: 45px;
+  height: 45px;
+  border: 0.5px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  background-color: #ffffff;
+  color: #1a1a1a;
+  transition: background-color 0.1s ease;
+  user-select: none;
+}
+
+.sudoku-cell:hover {
+  background-color: #f3f4f6;
+  cursor: pointer;
+}
+
+.sudoku-cell.fixed {
+  background-color: #f9fafb;
+  color: #111827;
+  font-weight: 700;
+}
+
+.sudoku-cell.user-input {
+  color: #2563eb;
+}
+
+/* Thick borders for 3x3 blocks */
+/* Vertical */
+.sudoku-cell:nth-child(3n):not(:nth-child(9n)) {
+  border-right: 2.5px solid #1a1a1a;
+}
+
+/* Horizontal */
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+  border-bottom: 2.5px solid #1a1a1a;
 }
