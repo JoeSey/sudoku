@@ -15,6 +15,7 @@ export const useGameStore = create<GameState>()(
     grid: createEmptyGrid(),
     difficulty: 'medium',
     selectedCellIndex: null,
+    isNoteMode: false,
     settings: {
       instantFeedback: true,
     },
@@ -25,6 +26,7 @@ export const useGameStore = create<GameState>()(
         state.difficulty = difficulty;
         state.grid = generateNewPuzzle(difficulty);
         state.selectedCellIndex = null;
+        state.isNoteMode = false;
         state.conflicts = [];
       });
     },
@@ -33,9 +35,32 @@ export const useGameStore = create<GameState>()(
       set((state) => {
         if (index >= 0 && index < 81 && !state.grid[index].fixed) {
           state.grid[index].value = value;
-          // Clear notes when setting a value
-          state.grid[index].notes = [];
           
+          // Smart Assistance: remove this value from notes in the same row, col, and block
+          if (value !== null) {
+            const row = Math.floor(index / 9);
+            const col = index % 9;
+            const blockStartRow = Math.floor(row / 3) * 3;
+            const blockStartCol = Math.floor(col / 3) * 3;
+
+            for (let i = 0; i < 81; i++) {
+              const r = Math.floor(i / 9);
+              const c = i % 9;
+              const inSameRow = r === row;
+              const inSameCol = c === col;
+              const inSameBlock = (r >= blockStartRow && r < blockStartRow + 3) &&
+                                 (c >= blockStartCol && c < blockStartCol + 3);
+
+              if (inSameRow || inSameCol || inSameBlock) {
+                const notes = state.grid[i].notes;
+                const noteIndex = notes.indexOf(value);
+                if (noteIndex !== -1) {
+                  notes.splice(noteIndex, 1);
+                }
+              }
+            }
+          }
+
           if (state.settings.instantFeedback) {
             state.conflicts = getAllConflicts(state.grid);
           }
@@ -50,10 +75,17 @@ export const useGameStore = create<GameState>()(
           const noteIndex = notes.indexOf(note);
           if (noteIndex === -1) {
             notes.push(note);
+            notes.sort((a, b) => a - b);
           } else {
             notes.splice(noteIndex, 1);
           }
         }
+      });
+    },
+
+    toggleNoteMode: () => {
+      set((state) => {
+        state.isNoteMode = !state.isNoteMode;
       });
     },
 

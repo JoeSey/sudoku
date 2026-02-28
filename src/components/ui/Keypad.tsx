@@ -5,14 +5,13 @@ export const Keypad: React.FC = () => {
   const selectedCellIndex = useGameStore((state) => state.selectedCellIndex);
   const setCellValue = useGameStore((state) => state.setCellValue);
   const toggleNote = useGameStore((state) => state.toggleNote);
-  
-  // Note mode state (Phase 3 placeholder)
-  const [noteMode, setNoteMode] = useState(false);
+  const isNoteMode = useGameStore((state) => state.isNoteMode);
+  const toggleNoteMode = useGameStore((state) => state.toggleNoteMode);
 
   const handleNumberClick = (num: number) => {
     if (selectedCellIndex === null) return;
     
-    if (noteMode) {
+    if (isNoteMode) {
       toggleNote(selectedCellIndex, num);
     } else {
       setCellValue(selectedCellIndex, num);
@@ -42,10 +41,10 @@ export const Keypad: React.FC = () => {
       </div>
       <div className="keypad-controls">
         <button 
-          className={`keypad-control note-toggle ${noteMode ? 'active' : ''}`}
-          onClick={() => setNoteMode(!noteMode)}
+          className={`keypad-control note-toggle ${isNoteMode ? 'active' : ''}`}
+          onClick={toggleNoteMode}
         >
-          Note Mode: {noteMode ? 'ON' : 'OFF'}
+          {isNoteMode ? '📝' : '✏️'} Note Mode: {isNoteMode ? 'ON' : 'OFF'}
         </button>
       </div>
     </div>

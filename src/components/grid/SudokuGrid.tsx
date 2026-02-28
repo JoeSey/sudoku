@@ -5,6 +5,9 @@ import { useGameStore } from '../../store/useGameStore';
 export const SudokuGrid: React.FC = () => {
   const moveSelection = useGameStore((state) => state.moveSelection);
   const setCellValue = useGameStore((state) => state.setCellValue);
+  const toggleNote = useGameStore((state) => state.toggleNote);
+  const toggleNoteMode = useGameStore((state) => state.toggleNoteMode);
+  const isNoteMode = useGameStore((state) => state.isNoteMode);
   const setSelectedCellIndex = useGameStore((state) => state.setSelectedCellIndex);
   const selectedCellIndex = useGameStore((state) => state.selectedCellIndex);
   const grid = useGameStore((state) => state.grid);
@@ -15,7 +18,19 @@ export const SudokuGrid: React.FC = () => {
     // Number input (1-9)
     if (/^[1-9]$/.test(e.key)) {
       e.preventDefault();
-      setCellValue(selectedCellIndex, parseInt(e.key, 10));
+      const num = parseInt(e.key, 10);
+      if (isNoteMode) {
+        toggleNote(selectedCellIndex, num);
+      } else {
+        setCellValue(selectedCellIndex, num);
+      }
+      return;
+    }
+
+    // Toggle Note Mode (N)
+    if (e.key.toLowerCase() === 'n') {
+      e.preventDefault();
+      toggleNoteMode();
       return;
     }
 
