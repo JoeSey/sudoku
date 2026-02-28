@@ -14,11 +14,13 @@ export const useGameStore = create<GameState>()(
   immer((set, get) => ({
     grid: createEmptyGrid(),
     difficulty: 'medium',
+    selectedCellIndex: null,
 
     initGame: (difficulty: Difficulty) => {
       set((state) => {
         state.difficulty = difficulty;
         state.grid = generateNewPuzzle(difficulty);
+        state.selectedCellIndex = null;
       });
     },
 
@@ -49,6 +51,42 @@ export const useGameStore = create<GameState>()(
     validateGrid: () => {
       const { grid } = get();
       return checkBoardValidity(grid);
+    },
+
+    setSelectedCellIndex: (index: number | null) => {
+      set((state) => {
+        state.selectedCellIndex = index;
+      });
+    },
+
+    moveSelection: (direction: 'up' | 'down' | 'left' | 'right') => {
+      const { selectedCellIndex } = get();
+      if (selectedCellIndex === null) return;
+
+      const row = Math.floor(selectedCellIndex / 9);
+      const col = selectedCellIndex % 9;
+
+      let newRow = row;
+      let newCol = col;
+
+      switch (direction) {
+        case 'up':
+          newRow = (row - 1 + 9) % 9;
+          break;
+        case 'down':
+          newRow = (row + 1) % 9;
+          break;
+        case 'left':
+          newCol = (col - 1 + 9) % 9;
+          break;
+        case 'right':
+          newCol = (col + 1) % 9;
+          break;
+      }
+
+      set((state) => {
+        state.selectedCellIndex = newRow * 9 + newCol;
+      });
     },
 
     resetGame: () => {
