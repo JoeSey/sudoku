@@ -1,0 +1,18 @@
+{
+  "project_name": "Sudoku",
+  "tech_stack": {
+    "framework": "React",
+    "language": "TypeScript",
+    "styling": "Vanilla CSS"
+  },
+  "style": "Modern",
+  "features": [
+    "Configurable puzzle generation (varying difficulty)",
+    "Smart pencil-note assistance",
+    "Fastest solve time tracking",
+    "Fluid, smart solving interface"
+  ],
+  "preferences": {
+    "use_generator_libraries": true
+  }
+}
