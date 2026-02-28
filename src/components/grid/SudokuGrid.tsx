@@ -4,11 +4,28 @@ import { useGameStore } from '../../store/useGameStore';
 
 export const SudokuGrid: React.FC = () => {
   const moveSelection = useGameStore((state) => state.moveSelection);
+  const setCellValue = useGameStore((state) => state.setCellValue);
   const setSelectedCellIndex = useGameStore((state) => state.setSelectedCellIndex);
   const selectedCellIndex = useGameStore((state) => state.selectedCellIndex);
   const grid = useGameStore((state) => state.grid);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (selectedCellIndex === null) return;
+
+    // Number input (1-9)
+    if (/^[1-9]$/.test(e.key)) {
+      e.preventDefault();
+      setCellValue(selectedCellIndex, parseInt(e.key, 10));
+      return;
+    }
+
+    // Clearing (Backspace/Delete)
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      e.preventDefault();
+      setCellValue(selectedCellIndex, null);
+      return;
+    }
+
     switch (e.key) {
       case 'ArrowUp':
         e.preventDefault();
