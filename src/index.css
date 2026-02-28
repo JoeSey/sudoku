@@ -175,3 +175,36 @@ h1 {
   color: #ffffff;
   border-color: #2563eb;
 }
+
+/* Pencil Grid */
+.pencil-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+  padding: 2px;
+  gap: 0;
+}
+
+.pencil-note {
+  font-size: 0.65rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.pencil-note.hidden {
+  visibility: hidden;
+}
+
+.pencil-note.visible {
+  visibility: visible;
+}
+
+.selected .pencil-note {
+  color: rgba(255, 255, 255, 0.8) !important;
+}

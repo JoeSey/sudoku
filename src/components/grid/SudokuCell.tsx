@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useGameStore } from '../../store/useGameStore';
 import classNames from 'classnames';
 import { areRelated, areIdenticalValue } from '../../utils/sudokuUtils';
+import { PencilGrid } from './PencilGrid';
 
 interface SudokuCellProps {
   index: number;
@@ -52,9 +53,7 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index }) => {
       {cell?.value !== null ? (
         <span className="cell-value">{cell?.value}</span>
       ) : (
-        <div className="notes-container">
-          {/* Placeholder for notes */}
-        </div>
+        <PencilGrid notes={cell?.notes ?? []} />
       )}
     </div>
   );
