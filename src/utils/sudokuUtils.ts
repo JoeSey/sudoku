@@ -43,3 +43,22 @@ export const checkBoardValidity = (grid: Cell[]): boolean => {
   const board = gridTo2D(grid);
   return isBoardValid(board);
 };
+
+export const areRelated = (index1: number, index2: number): boolean => {
+  if (index1 === index2) return false;
+
+  const r1 = Math.floor(index1 / 9);
+  const c1 = index1 % 9;
+  const b1 = Math.floor(r1 / 3) * 3 + Math.floor(c1 / 3);
+
+  const r2 = Math.floor(index2 / 9);
+  const c2 = index2 % 9;
+  const b2 = Math.floor(r2 / 3) * 3 + Math.floor(c2 / 3);
+
+  return r1 === r2 || c1 === c2 || b1 === b2;
+};
+
+export const areIdenticalValue = (val1: number | null, val2: number | null): boolean => {
+  return val1 !== null && val1 === val2;
+};
+

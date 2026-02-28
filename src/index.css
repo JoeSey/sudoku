@@ -83,11 +83,26 @@ h1 {
   color: #2563eb;
 }
 
+/* Highlights */
+.sudoku-cell.selected {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.sudoku-cell.highlight-related {
+  background-color: rgba(59, 130, 246, 0.1); /* light blue */
+}
+
+.sudoku-cell.highlight-identical {
+  background-color: rgba(59, 130, 246, 0.25); /* slightly darker blue */
+}
+
 /* Thick borders for 3x3 blocks */
 /* Vertical */
 .sudoku-cell:nth-child(3n):not(:nth-child(9n)) {
   border-right: 2.5px solid #1a1a1a;
 }
+
 
 /* Horizontal */
 .sudoku-cell:nth-child(n+19):nth-child(-n+27),
