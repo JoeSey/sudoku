@@ -22,10 +22,16 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
     const primaryCell = state.primaryIndex !== null ? state.grid[state.primaryIndex] : null;
     return primaryCell && areIdenticalValue(primaryCell.value, cell?.value ?? null) && state.primaryIndex !== index;
   });
+  const activeHint = useGameStore((state) => state.activeHint);
+  const isHintTarget = activeHint?.targetIndices.includes(index);
+  const isHintReason = activeHint?.reasonIndices.includes(index);
+  const strikeThroughValue = activeHint?.eliminates?.find(e => e.index === index)?.value;
+  
   const primaryValue = useGameStore((state) => 
     state.primaryIndex !== null ? state.grid[state.primaryIndex].value : null
   );
   const isCleaned = useGameStore((state) => state.lastCleanedIndices.includes(index));
+  const isZenMode = useGameStore((state) => state.isZenMode);
   const setCellValue = useGameStore((state) => state.setCellValue);
 
   const cellRef = useRef<HTMLDivElement>(null);
@@ -60,10 +66,12 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
         'user-input': !cell?.fixed && cell?.value !== null,
         'selected': isSelected,
         'primary': isPrimary,
-        'highlight-related': isRelated,
-        'highlight-identical': isIdentical,
-        'conflict': isConflicting,
+        'highlight-related': !isZenMode && isRelated,
+        'highlight-identical': !isZenMode && isIdentical,
+        'conflict': !isZenMode && isConflicting,
         'cleaned-pulse': isCleaned,
+        'hint-target': isHintTarget,
+        'hint-reason': isHintReason,
       })}
       tabIndex={isPrimary ? 0 : index === 0 && !useGameStore.getState().primaryIndex ? 0 : -1}
       onPointerDown={handlePointerDown}
@@ -74,7 +82,11 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
       {cell?.value !== null ? (
         <span key={cell?.value} className="cell-value">{cell?.value}</span>
       ) : (
-        <PencilGrid notes={cell?.notes ?? []} highlightValue={primaryValue} />
+        <PencilGrid 
+          notes={cell?.notes ?? []} 
+          highlightValue={primaryValue} 
+          strikeThroughValue={strikeThroughValue}
+        />
       )}
     </div>
   );

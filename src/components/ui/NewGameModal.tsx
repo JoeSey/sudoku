@@ -65,9 +65,10 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ isOpen, onClose, onS
                   <span className="label">{diff}</span>
                   <div className="meta">
                     <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>BEST TIME</div>
-                    <div style={{ fontFamily: 'monospace' }}>
+                    <div style={{ fontFamily: 'monospace', display: 'flex', gap: '4px', alignItems: 'center' }}>
                       {formatTime(bestTimes[diff]?.time ?? null)}
-                      {bestTimes[diff]?.autoNotes && <span className="badge-auto" title="Auto Notes Used">A</span>}
+                      {bestTimes[diff]?.autoNotes && <span className="badge-auto" title="Auto Notes Used" style={{ fontSize: '0.6rem', padding: '1px 3px', border: '1px solid #ddd', borderRadius: '2px', lineHeight: 1 }}>AUTO</span>}
+                      {bestTimes[diff]?.isAssisted && <span className="badge-hint" title="Logic Hint Used" style={{ fontSize: '0.6rem', padding: '1px 3px', border: '1px solid #ddd', borderRadius: '2px', lineHeight: 1, backgroundColor: '#fdf2f2', color: '#991b1b' }}>HINT</span>}
                     </div>
                   </div>
                 </div>

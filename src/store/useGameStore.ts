@@ -3,6 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { GameState, Cell, Difficulty, Snapshot } from '../types';
 import { generateNewPuzzle, checkBoardValidity, getAllConflicts } from '../utils/sudokuUtils';
+import { getNextHint } from '../utils/hintService';
 
 const createEmptyGrid = (): Cell[] => 
   Array.from({ length: 81 }, () => ({
@@ -37,6 +38,9 @@ export const useGameStore = create<GameState>()(
         isNoteMode: false,
         isAutoNotesUsed: false,
         useSymmetry: true,
+        isZenMode: false,
+        isAssisted: false,
+        activeHint: null,
         settings: {
           instantFeedback: true,
         },
@@ -57,6 +61,29 @@ export const useGameStore = create<GameState>()(
         future: [],
         canUndo: false,
         canRedo: false,
+
+        toggleZenMode: () => {
+          set((state) => {
+            state.isZenMode = !state.isZenMode;
+          });
+        },
+
+        showHint: () => {
+          const { grid } = get();
+          const hintData = getNextHint(grid);
+          if (hintData) {
+            set((state) => {
+              state.activeHint = hintData;
+              state.isAssisted = true;
+            });
+          }
+        },
+
+        clearHint: () => {
+          set((state) => {
+            state.activeHint = null;
+          });
+        },
 
         undo: () => {
           set((state) => {
@@ -114,6 +141,8 @@ export const useGameStore = create<GameState>()(
             state.primaryIndex = null;
             state.isNoteMode = false;
             state.isAutoNotesUsed = false;
+            state.isAssisted = false;
+            state.activeHint = null;
             state.conflicts = [];
             state.lastCleanedIndices = [];
             state.timer = 0;
@@ -184,12 +213,14 @@ export const useGameStore = create<GameState>()(
                 const currentMistakes = state.mistakeCount;
                 const best = state.bestTimes[currentDifficulty];
                 const autoNotes = state.isAutoNotesUsed;
+                const assisted = state.isAssisted;
 
                 if (!best || currentTime < best.time) {
                   state.bestTimes[currentDifficulty] = {
                     time: currentTime,
                     mistakes: currentMistakes,
                     autoNotes,
+                    isAssisted: assisted,
                   };
                 }
               }
@@ -356,7 +387,12 @@ export const useGameStore = create<GameState>()(
               const currentTime = state.timer;
               const best = state.bestTimes[state.difficulty];
               if (!best || currentTime < best.time) {
-                state.bestTimes[state.difficulty] = { time: currentTime, mistakes: state.mistakeCount, autoNotes: state.isAutoNotesUsed };
+                state.bestTimes[state.difficulty] = { 
+                  time: currentTime, 
+                  mistakes: state.mistakeCount, 
+                  autoNotes: state.isAutoNotesUsed,
+                  isAssisted: state.isAssisted 
+                };
               }
             }
           });
@@ -416,7 +452,12 @@ export const useGameStore = create<GameState>()(
           set((state) => {
             const best = state.bestTimes[state.difficulty];
             if (!best || state.timer < best.time) {
-              state.bestTimes[state.difficulty] = { time: state.timer, mistakes: state.mistakeCount, autoNotes: state.isAutoNotesUsed };
+              state.bestTimes[state.difficulty] = { 
+                time: state.timer, 
+                mistakes: state.mistakeCount, 
+                autoNotes: state.isAutoNotesUsed,
+                isAssisted: state.isAssisted
+              };
             }
           });
         },

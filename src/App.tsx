@@ -5,6 +5,7 @@ import { Keypad } from './components/ui/Keypad';
 import { GameInfo } from './components/ui/GameInfo';
 import { WinOverlay } from './components/ui/WinOverlay';
 import { NewGameModal } from './components/ui/NewGameModal';
+import { HintExplanation } from './components/ui/HintExplanation';
 
 function App() {
   const initGame = useGameStore((state) => state.initGame);
@@ -85,6 +86,7 @@ function App() {
       <SudokuGrid />
       <Keypad />
       
+      <HintExplanation />
       <WinOverlay onNewGame={handleNewGame} />
       <NewGameModal 
         isOpen={isNewGameModalOpen} 

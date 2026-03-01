@@ -78,9 +78,9 @@ Plans:
 - [x] Undo/Redo functionality (keyboard & UI buttons). [PH4-16]
 - [x] **Verification:** Verify all new features on both desktop and mobile layouts.
 
-## Phase 5: Advanced Features & Logic Trainer (Optional)
+## Phase 5: Advanced Features & Logic Trainer
 **Goal:** Add "Smart Hints" and explain solving patterns.
-- [ ] Integrate `sudoku-core` for logic analysis.
-- [ ] "Hint" button that highlights a logical deduction (e.g., Naked Pair).
-- [ ] "Zen Mode" toggle for extra minimalist focus.
-- [ ] **Verification:** Use the hint system to find a hidden triple and verify the explanation.
+- [x] Integrate `sudoku-core` for logic analysis.
+- [x] "Hint" button that highlights a logical deduction (e.g., Naked Pair).
+- [x] "Zen Mode" toggle for extra minimalist focus.
+- [x] **Verification:** Use the hint system to find a hidden triple and verify the explanation.

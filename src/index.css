@@ -489,7 +489,31 @@ h1 {
   to { transform: scale(1); opacity: 1; }
 }
 
-@keyframes slide-up {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+.sudoku-cell.hint-target {
+  background-color: #f5f3ff;
+  outline: 2px solid #7c3aed;
+  outline-offset: -2px;
+  z-index: 5;
+}
+
+.sudoku-cell.hint-reason {
+  background-color: #fef3c7;
+}
+
+.pencil-note.strike-through {
+  color: #ef4444;
+  text-decoration: line-through;
+  opacity: 1;
+  visibility: visible;
+  animation: strike 0.5s ease-out forwards;
+}
+
+@keyframes strike {
+  from { text-decoration-color: transparent; }
+  to { text-decoration-color: currentColor; }
+}
+
+@keyframes slideUp {
+  from { transform: translate(-50%, 20px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
 }

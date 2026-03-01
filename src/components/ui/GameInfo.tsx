@@ -10,7 +10,10 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
   const mistakeCount = useGameStore((state) => state.mistakeCount);
   const difficulty = useGameStore((state) => state.difficulty);
   const isPaused = useGameStore((state) => state.isPaused);
+  const isZenMode = useGameStore((state) => state.isZenMode);
   const togglePause = useGameStore((state) => state.togglePause);
+  const toggleZenMode = useGameStore((state) => state.toggleZenMode);
+  const showHint = useGameStore((state) => state.showHint);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -21,8 +24,8 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
   return (
     <div className="game-info" style={{
       display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: 'column',
+      gap: '8px',
       width: '100%',
       maxWidth: '500px',
       margin: '0 auto',
@@ -32,21 +35,39 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
       textTransform: 'uppercase',
       color: '#666'
     }}>
-      <div style={{ display: 'flex', gap: '15px' }}>
-        <button 
-          onClick={onNewGame}
-          className="hover:text-black transition-colors"
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, textTransform: 'uppercase', font: 'inherit' }}
-        >
-          New Game
-        </button>
-        <span style={{ color: '#000', fontWeight: 'bold' }}>{difficulty}</span>
-      </div>
-      
-      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-        <span>Mistakes: <span style={{ color: mistakeCount > 0 ? '#000' : 'inherit' }}>{mistakeCount}</span></span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ color: '#000', fontWeight: 'bold', minWidth: '45px' }}>{formatTime(timer)}</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '15px' }}>
+          <button 
+            onClick={onNewGame}
+            className="hover:text-black transition-colors"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, textTransform: 'uppercase', font: 'inherit' }}
+          >
+            New Game
+          </button>
+          <span style={{ color: '#000', fontWeight: 'bold' }}>{difficulty}</span>
+          <button 
+            onClick={toggleZenMode}
+            className={isZenMode ? 'text-black font-bold' : 'hover:text-black transition-colors'}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, textTransform: 'uppercase', font: 'inherit' }}
+          >
+            {isZenMode ? 'ZEN: ON' : 'ZEN: OFF'}
+          </button>
+          <button 
+            onClick={showHint}
+            className="hover:text-black transition-colors"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, textTransform: 'uppercase', font: 'inherit', color: '#7c3aed' }}
+          >
+            Hint
+          </button>
+        </div>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          {!isZenMode && (
+            <>
+              <span>Mistakes: <span style={{ color: mistakeCount > 0 ? '#000' : 'inherit' }}>{mistakeCount}</span></span>
+              <span style={{ color: '#000', fontWeight: 'bold', minWidth: '45px' }}>{formatTime(timer)}</span>
+            </>
+          )}
           <button 
             onClick={() => togglePause()}
             className="hover:text-black transition-colors"

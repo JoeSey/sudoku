@@ -16,6 +16,7 @@ export const Keypad: React.FC = () => {
   const canUndo = useGameStore((state) => state.canUndo);
   const canRedo = useGameStore((state) => state.canRedo);
   const isPaused = useGameStore((state) => state.isPaused);
+  const isZenMode = useGameStore((state) => state.isZenMode);
 
   const getDigitCount = (num: number) => {
     return grid.filter(cell => cell.value === num).length;
@@ -52,7 +53,7 @@ export const Keypad: React.FC = () => {
               onClick={() => handleNumberClick(num)}
               disabled={isPaused}
               style={{
-                background: `conic-gradient(#e5e5e5 ${percentage}%, #ffffff 0)`
+                background: isZenMode ? '#ffffff' : `conic-gradient(#e5e5e5 ${percentage}%, #ffffff 0)`
               }}
             >
               <span className="digit-label">{num}</span>
@@ -80,7 +81,7 @@ export const Keypad: React.FC = () => {
               onClick={() => handleNumberClick(num)}
               disabled={isPaused}
               style={{
-                background: `conic-gradient(#e5e5e5 ${percentage}%, #ffffff 0)`
+                background: isZenMode ? '#ffffff' : `conic-gradient(#e5e5e5 ${percentage}%, #ffffff 0)`
               }}
             >
               <span className="digit-label">{num}</span>
