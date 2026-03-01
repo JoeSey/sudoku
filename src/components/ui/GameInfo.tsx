@@ -36,7 +36,7 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
       color: '#666'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', gap: '15px' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button 
             onClick={onNewGame}
             className="hover:text-black transition-colors"
@@ -68,8 +68,7 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
               alignItems: 'center',
               fontSize: '0.8rem', 
               fontWeight: 'bold',
-              color: '#7c3aed',
-              marginLeft: '5px'
+              color: '#7c3aed'
             }}
           >
             ?
