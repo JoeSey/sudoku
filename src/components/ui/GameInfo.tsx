@@ -63,26 +63,30 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {!isZenMode && (
-            <>
-              <span>Mistakes: <span style={{ color: mistakeCount > 0 ? '#000' : 'inherit' }}>{mistakeCount}</span></span>
-              <span style={{ color: '#000', fontWeight: 'bold', minWidth: '45px' }}>{formatTime(timer)}</span>
-            </>
+            <span>Mistakes: <span style={{ color: mistakeCount > 0 ? '#000' : 'inherit' }}>{mistakeCount}</span></span>
           )}
-          <button 
-            onClick={() => togglePause()}
-            className="hover:text-black transition-colors"
-            style={{
-              background: 'none',
-              border: '1px solid #ddd',
-              borderRadius: '3px',
-              cursor: 'pointer',
-              padding: '2px 6px',
-              fontSize: '0.7rem',
-              textTransform: 'uppercase'
-            }}
-          >
-            {isPaused ? 'Resume' : 'Pause'}
-          </button>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+            {!isZenMode && (
+              <span style={{ color: '#000', fontWeight: 'bold', fontSize: '0.8rem', lineHeight: 1 }}>{formatTime(timer)}</span>
+            )}
+            <button 
+              onClick={() => togglePause()}
+              className="hover:text-black transition-colors"
+              style={{
+                background: 'none',
+                border: '1px solid #ddd',
+                borderRadius: '3px',
+                cursor: 'pointer',
+                padding: '2px 6px',
+                fontSize: '0.65rem',
+                textTransform: 'uppercase',
+                lineHeight: 1
+              }}
+            >
+              {isPaused ? 'Resume' : 'Pause'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
