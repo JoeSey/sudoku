@@ -1,7 +1,11 @@
 import React from 'react';
 import { useGameStore } from '../../store/useGameStore';
 
-export const GameInfo: React.FC = () => {
+interface GameInfoProps {
+  onNewGame: () => void;
+}
+
+export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
   const timer = useGameStore((state) => state.timer);
   const mistakeCount = useGameStore((state) => state.mistakeCount);
   const difficulty = useGameStore((state) => state.difficulty);
@@ -21,28 +25,44 @@ export const GameInfo: React.FC = () => {
       alignItems: 'center',
       width: '100%',
       maxWidth: '500px',
-      margin: '10px auto',
+      margin: '0 auto',
       padding: '0 10px',
       fontFamily: 'monospace',
-      fontSize: '1rem',
-      textTransform: 'uppercase'
+      fontSize: '0.9rem',
+      textTransform: 'uppercase',
+      color: '#666'
     }}>
-      <div>{difficulty}</div>
-      <div>Mistakes: {mistakeCount}</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <span>{formatTime(timer)}</span>
+      <div style={{ display: 'flex', gap: '15px' }}>
         <button 
-          onClick={() => togglePause()}
-          style={{
-            background: 'none',
-            border: '1px solid #000',
-            cursor: 'pointer',
-            padding: '2px 8px',
-            fontSize: '0.8rem'
-          }}
+          onClick={onNewGame}
+          className="hover:text-black transition-colors"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, textTransform: 'uppercase', font: 'inherit' }}
         >
-          {isPaused ? 'Resume' : 'Pause'}
+          New Game
         </button>
+        <span style={{ color: '#000', fontWeight: 'bold' }}>{difficulty}</span>
+      </div>
+      
+      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <span>Mistakes: <span style={{ color: mistakeCount > 0 ? '#000' : 'inherit' }}>{mistakeCount}</span></span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ color: '#000', fontWeight: 'bold', minWidth: '45px' }}>{formatTime(timer)}</span>
+          <button 
+            onClick={() => togglePause()}
+            className="hover:text-black transition-colors"
+            style={{
+              background: 'none',
+              border: '1px solid #ddd',
+              borderRadius: '3px',
+              cursor: 'pointer',
+              padding: '2px 6px',
+              fontSize: '0.7rem',
+              textTransform: 'uppercase'
+            }}
+          >
+            {isPaused ? 'Resume' : 'Pause'}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -52,20 +52,31 @@ Plans:
 **Goal:** Add polish with a timer, difficulty levels, and LocalStorage.
 **Requirements:** [PH4-01, PH4-02, PH4-03, PH4-04, PH4-05, PH4-06, PH4-07, PH4-08, PH4-09, PH4-10]
 
-- [ ] Game timer and solved-state detection. [PH4-01, PH4-02]
-- [ ] Difficulty selection menu (New Game dialog). [PH4-03]
-- [ ] LocalStorage integration for auto-save and personal bests. [PH4-04, PH4-05]
-- [ ] "Zen Minimalism" UI styling and animations. [PH4-06]
-- [ ] Mistake counter and auto-pause behavior. [PH4-07, PH4-08, PH4-09]
-- [ ] Symmetry Toggle placeholder. [PH4-10]
-- [ ] **Verification:** Close the browser, reopen, and ensure the game state and timer are preserved.
+- [x] Game timer and solved-state detection. [PH4-01, PH4-02]
+- [x] Difficulty selection menu (New Game dialog). [PH4-03]
+- [x] LocalStorage integration for auto-save and personal bests. [PH4-04, PH4-05]
+- [x] "Zen Minimalism" UI styling and animations. [PH4-06]
+- [x] Mistake counter and auto-pause behavior. [PH4-07, PH4-08, PH4-09]
+- [x] Symmetry Toggle placeholder. [PH4-10]
+- [x] **Verification:** Close the browser, reopen, and ensure the game state and timer are preserved.
 
 **Plans:** 3 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — State management & persistence
-- [ ] 04-02-PLAN.md — Timer logic & auto-pause behavior
-- [ ] 04-03-PLAN.md — New Game flow & Zen styling
+- [x] 01-01-PLAN.md — State management & persistence
+- [x] 02-02-PLAN.md — Timer logic & auto-pause behavior
+- [x] 03-03-PLAN.md — New Game flow & Zen styling
+
+## Phase 4.5: Modern UI/UX Enhancements
+**Goal:** Refine the user experience with advanced visual feedback and mobile optimizations.
+**Requirements:** [PH4-11, PH4-12, PH4-13, PH4-14, PH4-15]
+- [x] Pie-chart keypad buttons showing digit progress. [PH4-11]
+- [x] Auto-Notes and Erase All Notes features. [PH4-12]
+- [x] Zen highlights for identical values and related pencil notes. [PH4-13]
+- [x] Optimized mobile responsiveness (scaling, touch-action). [PH4-14]
+- [x] Double-tap on single pencil mark to fill final value. [PH4-15]
+- [x] Undo/Redo functionality (keyboard & UI buttons). [PH4-16]
+- [x] **Verification:** Verify all new features on both desktop and mobile layouts.
 
 ## Phase 5: Advanced Features & Logic Trainer (Optional)
 **Goal:** Add "Smart Hints" and explain solving patterns.

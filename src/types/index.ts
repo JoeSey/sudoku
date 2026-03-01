@@ -16,15 +16,38 @@ export interface GameState {
   selectedIndices: number[];
   primaryIndex: number | null;
   isNoteMode: boolean;
+  isAutoNotesUsed: boolean;
   settings: GameSettings;
   conflicts: number[];
+  lastCleanedIndices: number[];
+  timer: number;
+  isPaused: boolean;
+  mistakeCount: number;
+  bestTimes: Record<Difficulty, { time: number; mistakes: number; autoNotes: boolean } | null>;
+  isGameWon: boolean;
+  
+  // History
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+
   initGame: (difficulty: Difficulty) => void;
   setCellValue: (index: number, value: number | null) => void;
   toggleNote: (index: number, note: number) => void;
   toggleNoteMode: () => void;
+  fillAutoNotes: () => void;
+  clearAllNotes: () => void;
   validateGrid: () => boolean;
   setSelection: (indices: number[], primary?: number | null) => void;
   moveSelection: (direction: 'up' | 'down' | 'left' | 'right') => void;
   resetGame: () => void;
   checkConflicts: () => void;
+  setCellValueInSelection: (value: number | null) => void;
+  toggleNoteInSelection: (note: number) => void;
+  tickTimer: () => void;
+  togglePause: (paused?: boolean) => void;
+  incrementMistakes: () => void;
+  setGameWon: (won: boolean) => void;
+  saveBestTime: () => void;
 }

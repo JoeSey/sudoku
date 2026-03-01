@@ -12,6 +12,8 @@ export const SudokuGrid: React.FC = () => {
   const selectedIndices = useGameStore((state) => state.selectedIndices);
   const primaryIndex = useGameStore((state) => state.primaryIndex);
   const grid = useGameStore((state) => state.grid);
+  const undo = useGameStore((state) => state.undo);
+  const redo = useGameStore((state) => state.redo);
 
   const [dragStart, setDragStart] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -36,32 +38,52 @@ export const SudokuGrid: React.FC = () => {
     return indices;
   };
 
-  const handleMouseDown = (index: number) => {
+  const handlePointerDown = (index: number, e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
     setDragStart(index);
     setIsDragging(true);
     setSelection([index], index);
   };
 
-  const handleMouseEnter = (index: number) => {
+  const handlePointerEnter = (index: number, e: React.PointerEvent) => {
     if (isDragging && dragStart !== null) {
       const indices = getRectangleIndices(dragStart, index);
       setSelection(indices, index);
     }
   };
 
-  const handleMouseUp = () => {
+  const handlePointerUp = () => {
     setIsDragging(false);
     setDragStart(null);
   };
 
   useEffect(() => {
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('pointerup', handlePointerUp);
     return () => {
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('pointerup', handlePointerUp);
     };
   }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    // History (Ctrl+Z, Ctrl+Shift+Z / Ctrl+Y)
+    if (e.ctrlKey || e.metaKey) {
+      if (e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) {
+          redo();
+        } else {
+          undo();
+        }
+        return;
+      }
+      if (e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        redo();
+        return;
+      }
+    }
+
     if (primaryIndex === null) return;
 
     // Number input (1-9)
@@ -114,10 +136,8 @@ export const SudokuGrid: React.FC = () => {
         const direction = e.shiftKey ? -1 : 1;
         let nextIndex = (primaryIndex + direction + 81) % 81;
 
-        // Find next non-fixed cell
         while (grid[nextIndex].fixed) {
           nextIndex = (nextIndex + direction + 81) % 81;
-          // Security break if all cells are fixed
           if (nextIndex === primaryIndex) break;
         }
         setSelection([nextIndex], nextIndex);
@@ -129,7 +149,6 @@ export const SudokuGrid: React.FC = () => {
   const isPaused = useGameStore((state) => state.isPaused);
   const togglePause = useGameStore((state) => state.togglePause);
 
-  // Array of 81 indices
   const indices = Array.from({ length: 81 }, (_, i) => i);
 
   return (
@@ -146,15 +165,16 @@ export const SudokuGrid: React.FC = () => {
           filter: isPaused ? 'blur(15px)' : 'none',
           pointerEvents: isPaused ? 'none' : 'auto',
           transition: 'filter 0.3s ease',
-          margin: '0 auto' // Override index.css margin to control it via container
+          margin: '0 auto',
+          touchAction: 'none'
         }}
       >
         {indices.map((index) => (
           <SudokuCell 
             key={index} 
             index={index} 
-            onMouseDown={() => handleMouseDown(index)}
-            onMouseEnter={() => handleMouseEnter(index)}
+            onPointerDown={(e) => handlePointerDown(index, e)}
+            onPointerEnter={(e) => handlePointerEnter(index, e)}
           />
         ))}
       </div>

@@ -1,0 +1,117 @@
+import React, { useState } from 'react';
+import { useGameStore } from '../../store/useGameStore';
+import { Difficulty } from '../../types';
+import classNames from 'classnames';
+
+interface NewGameModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onStartGame: (difficulty: Difficulty) => void;
+}
+
+const formatTime = (seconds: number | null) => {
+  if (seconds === null) return '--:--';
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
+
+export const NewGameModal: React.FC<NewGameModalProps> = ({ isOpen, onClose, onStartGame }) => {
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('medium');
+  const [showConfirm, setShowConfirm] = useState(false);
+  const grid = useGameStore((state) => state.grid);
+  const bestTimes = useGameStore((state) => state.bestTimes);
+
+  if (!isOpen) return null;
+
+  const hasProgress = grid.some(cell => !cell.fixed && cell.value !== null);
+
+  const handleStart = () => {
+    if (hasProgress) {
+      setShowConfirm(true);
+    } else {
+      onStartGame(selectedDifficulty);
+      onClose();
+    }
+  };
+
+  const confirmStart = () => {
+    onStartGame(selectedDifficulty);
+    setShowConfirm(false);
+    onClose();
+  };
+
+  const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert'];
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        {!showConfirm ? (
+          <>
+            <h2 className="modal-heading">New Game</h2>
+            
+            <div style={{ marginBottom: '2rem' }}>
+              {difficulties.map((diff) => (
+                <div
+                  key={diff}
+                  onClick={() => setSelectedDifficulty(diff)}
+                  className={classNames('diff-select-item', {
+                    'active': selectedDifficulty === diff
+                  })}
+                >
+                  <span className="label">{diff}</span>
+                  <div className="meta">
+                    <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>BEST TIME</div>
+                    <div style={{ fontFamily: 'monospace' }}>
+                      {formatTime(bestTimes[diff]?.time ?? null)}
+                      {bestTimes[diff]?.autoNotes && <span className="badge-auto" title="Auto Notes Used">A</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', padding: '0.75rem', backgroundColor: '#f9fafb', borderRadius: '0.25rem' }}>
+              <input type="checkbox" id="symmetry" style={{ width: '1rem', height: '1rem' }} defaultChecked />
+              <label htmlFor="symmetry" style={{ fontSize: '0.875rem', color: '#4b5563', cursor: 'pointer' }}>Symmetrical Layout (Recommended)</label>
+            </div>
+
+            <div className="flex-gap">
+              <button
+                onClick={onClose}
+                className="btn btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleStart}
+                className="btn btn-primary"
+              >
+                Start
+              </button>
+            </div>
+          </>
+        ) : (
+          <div style={{ padding: '1rem 0' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', textTransform: 'uppercase' }}>Discard Progress?</h3>
+            <p style={{ color: '#6b7280', marginBottom: '2rem' }}>Your current game progress will be lost. Are you sure you want to start a new game?</p>
+            <div className="flex-gap">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="btn btn-secondary"
+              >
+                Back
+              </button>
+              <button
+                onClick={confirmStart}
+                className="btn btn-danger"
+              >
+                Start New
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
