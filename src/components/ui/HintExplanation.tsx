@@ -45,16 +45,16 @@ export const HintExplanation: React.FC = () => {
   return (
     <div className="hint-overlay" style={{
       position: 'fixed',
-      bottom: '100px',
+      bottom: '20px',
       left: '50%',
       transform: 'translateX(-50%)',
-      width: '90%',
-      maxWidth: '400px',
+      width: '94%',
+      maxWidth: '450px',
       backgroundColor: '#fff',
-      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-      borderRadius: '12px',
-      padding: '20px',
-      zIndex: 100,
+      boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
+      borderRadius: '16px',
+      padding: '16px',
+      zIndex: 200,
       border: '1px solid #e5e7eb',
       animation: 'slideUp 0.3s ease-out'
     }}>

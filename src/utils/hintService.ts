@@ -23,7 +23,7 @@ export const getNextHint = (grid: Cell[]): Hint | null => {
   }
 
   // Basic strategy mapping
-  const strategyTitle = result.analysis.usedStrategies.length > 0 
+  let strategyTitle = result.analysis.usedStrategies.length > 0 
     ? result.analysis.usedStrategies[0].title 
     : "Logical Deduction";
 
@@ -36,9 +36,12 @@ export const getNextHint = (grid: Cell[]): Hint | null => {
     const { row, col, value } = valueStep;
     const index = row * 9 + col;
     
+    // If the step has a more specific strategy, use it (depends on library version/fork)
+    const stepStrategy = (valueStep as any).strategy || strategyTitle;
+    
     return {
-      strategy: strategyTitle,
-      description: getStrategyDescription(strategyTitle, value),
+      strategy: stepStrategy,
+      description: getStrategyDescription(stepStrategy, value),
       targetIndices: [index],
       reasonIndices: [], // TODO: Future refinement
       value,
@@ -48,10 +51,11 @@ export const getNextHint = (grid: Cell[]): Hint | null => {
   if (eliminationSteps.length > 0) {
     const { row, col, value } = eliminationSteps[0];
     const index = row * 9 + col;
+    const stepStrategy = (eliminationSteps[0] as any).strategy || strategyTitle;
 
     return {
-      strategy: strategyTitle,
-      description: `Logic shows ${value} can be removed from this cell.`,
+      strategy: stepStrategy,
+      description: getStrategyDescription(stepStrategy, value, true),
       targetIndices: [index],
       reasonIndices: [],
       eliminates: eliminationSteps.map(s => ({ 
@@ -75,14 +79,32 @@ export const getNextHint = (grid: Cell[]): Hint | null => {
   return null;
 };
 
-const getStrategyDescription = (strategy: string, value: number): string => {
+const getStrategyDescription = (strategy: string, value: number, isElimination = false): string => {
+  const valStr = value !== undefined ? value.toString() : "a value";
+  
+  if (isElimination) {
+    switch (strategy) {
+      case 'Naked Pair':
+        return `A Naked Pair in this house means ${valStr} can be removed from other cells.`;
+      case 'Naked Triple':
+        return `A Naked Triple in this house means ${valStr} can be removed from other cells.`;
+      case 'Hidden Pair':
+        return `A Hidden Pair in this house means other candidates can be removed, leaving only ${valStr}.`;
+      case 'Pointing Pair':
+      case 'Pointing Triple':
+        return `Candidates in this block point to ${valStr} being restricted in this row/column.`;
+      default:
+        return `Logical analysis allows us to eliminate ${valStr} from this cell.`;
+    }
+  }
+
   switch (strategy) {
     case 'Single Remaining Cell Strategy':
     case 'Naked Single':
-      return `This cell has only one possible candidate: ${value}.`;
+      return `This cell has only one possible candidate: ${valStr}.`;
     case 'Hidden Single':
-      return `In this row, column, or block, ${value} can only fit in this cell.`;
+      return `In this row, column, or block, ${valStr} can only fit in this cell.`;
     default:
-      return `Logical analysis suggests ${value} belongs in this cell or should be eliminated.`;
+      return `Logical analysis suggests ${valStr} belongs in this cell.`;
   }
 };
