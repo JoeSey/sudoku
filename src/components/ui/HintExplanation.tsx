@@ -71,14 +71,12 @@ export const HintExplanation: React.FC = () => {
           </span>
           <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }}>{activeHint.strategy}</h3>
         </div>
-        {!solvedByPlayer && (
-          <button 
-            onClick={clearHint}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: '#9ca3af' }}
-          >
-            ✕
-          </button>
-        )}
+        <button 
+          onClick={clearHint}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: '#9ca3af' }}
+        >
+          ✕
+        </button>
       </div>
 
       {solvedByPlayer ? (
