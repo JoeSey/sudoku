@@ -54,10 +54,25 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
           </button>
           <button 
             onClick={showHint}
-            className="hover:text-black transition-colors"
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, textTransform: 'uppercase', font: 'inherit', color: '#7c3aed' }}
+            className="hover:bg-purple-50 transition-colors"
+            title="Get Logic Hint"
+            style={{ 
+              background: '#f5f3ff', 
+              border: '1px solid #7c3aed', 
+              borderRadius: '50%', 
+              cursor: 'pointer', 
+              width: '24px',
+              height: '24px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: '0.8rem', 
+              fontWeight: 'bold',
+              color: '#7c3aed',
+              marginLeft: '5px'
+            }}
           >
-            Hint
+            ?
           </button>
         </div>
         
