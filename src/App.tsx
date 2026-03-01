@@ -40,8 +40,8 @@ function App() {
     setIsNewGameModalOpen(true);
   };
 
-  const startNewGame = (difficulty: any) => {
-    initGame(difficulty);
+  const startNewGame = (difficulty: any, useSymmetry: boolean) => {
+    initGame(difficulty, useSymmetry);
     setGameWon(false);
     setIsNewGameModalOpen(false);
   };

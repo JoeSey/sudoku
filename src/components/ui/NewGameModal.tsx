@@ -6,7 +6,7 @@ import classNames from 'classnames';
 interface NewGameModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onStartGame: (difficulty: Difficulty) => void;
+  onStartGame: (difficulty: Difficulty, useSymmetry: boolean) => void;
 }
 
 const formatTime = (seconds: number | null) => {
@@ -18,25 +18,28 @@ const formatTime = (seconds: number | null) => {
 
 export const NewGameModal: React.FC<NewGameModalProps> = ({ isOpen, onClose, onStartGame }) => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('medium');
+  const initialSymmetry = useGameStore.getState().useSymmetry;
+  const [useSymmetry, setUseSymmetry] = useState(initialSymmetry);
   const [showConfirm, setShowConfirm] = useState(false);
   const grid = useGameStore((state) => state.grid);
   const bestTimes = useGameStore((state) => state.bestTimes);
+  const isGameWon = useGameStore((state) => state.isGameWon);
 
   if (!isOpen) return null;
 
-  const hasProgress = grid.some(cell => !cell.fixed && cell.value !== null);
+  const hasProgress = !isGameWon && grid.some(cell => !cell.fixed && cell.value !== null);
 
   const handleStart = () => {
     if (hasProgress) {
       setShowConfirm(true);
     } else {
-      onStartGame(selectedDifficulty);
+      onStartGame(selectedDifficulty, useSymmetry);
       onClose();
     }
   };
 
   const confirmStart = () => {
-    onStartGame(selectedDifficulty);
+    onStartGame(selectedDifficulty, useSymmetry);
     setShowConfirm(false);
     onClose();
   };
@@ -72,8 +75,14 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ isOpen, onClose, onS
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', padding: '0.75rem', backgroundColor: '#f9fafb', borderRadius: '0.25rem' }}>
-              <input type="checkbox" id="symmetry" style={{ width: '1rem', height: '1rem' }} defaultChecked />
-              <label htmlFor="symmetry" style={{ fontSize: '0.875rem', color: '#4b5563', cursor: 'pointer' }}>Symmetrical Layout (Recommended)</label>
+              <input 
+                type="checkbox" 
+                id="symmetry" 
+                style={{ width: '1rem', height: '1rem' }} 
+                checked={useSymmetry}
+                onChange={(e) => setUseSymmetry(e.target.checked)}
+              />
+              <label htmlFor="symmetry" style={{ fontSize: '0.875rem', color: '#4b5563', cursor: 'pointer' }}>Rotational Symmetry</label>
             </div>
 
             <div className="flex-gap">

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { GameState, Cell, Difficulty } from '../types';
+import { GameState, Cell, Difficulty, Snapshot } from '../types';
 import { generateNewPuzzle, checkBoardValidity, getAllConflicts } from '../utils/sudokuUtils';
 
 const createEmptyGrid = (): Cell[] => 
@@ -11,30 +11,21 @@ const createEmptyGrid = (): Cell[] =>
     notes: [],
   }));
 
-interface Snapshot {
-  grid: Cell[];
-  isAutoNotesUsed: boolean;
-  mistakeCount: number;
-}
+const HISTORY_LIMIT = 200;
 
 export const useGameStore = create<GameState>()(
   persist(
     immer((set, get) => {
-      // Use closure for history to avoid including it in persist if we want (optional)
-      // Actually, persisting history is good for UX.
-      let past: Snapshot[] = [];
-      let future: Snapshot[] = [];
-
       const pushSnapshot = (state: any) => {
         // Deep clone the grid to ensure snapshot is immutable
-        past.push({
+        state.past.push({
           grid: JSON.parse(JSON.stringify(state.grid)),
           isAutoNotesUsed: state.isAutoNotesUsed,
           mistakeCount: state.mistakeCount,
         });
-        if (past.length > 50) past.shift(); // Limit history
-        future = []; // Clear redo stack on new action
-        state.canUndo = past.length > 0;
+        if (state.past.length > HISTORY_LIMIT) state.past.shift();
+        state.future = []; // Clear redo stack on new action
+        state.canUndo = state.past.length > 0;
         state.canRedo = false;
       };
 
@@ -45,6 +36,7 @@ export const useGameStore = create<GameState>()(
         primaryIndex: null,
         isNoteMode: false,
         isAutoNotesUsed: false,
+        useSymmetry: true,
         settings: {
           instantFeedback: true,
         },
@@ -61,57 +53,63 @@ export const useGameStore = create<GameState>()(
           expert: null,
         },
 
+        past: [],
+        future: [],
         canUndo: false,
         canRedo: false,
 
         undo: () => {
           set((state) => {
-            if (past.length === 0) return;
+            if (state.past.length === 0) return;
             
             // Current to future
-            future.push({
+            state.future.push({
               grid: JSON.parse(JSON.stringify(state.grid)),
               isAutoNotesUsed: state.isAutoNotesUsed,
               mistakeCount: state.mistakeCount,
             });
+            if (state.future.length > HISTORY_LIMIT) state.future.shift();
             
-            const snapshot = past.pop()!;
+            const snapshot = state.past.pop()!;
             state.grid = snapshot.grid;
             state.isAutoNotesUsed = snapshot.isAutoNotesUsed;
             state.mistakeCount = snapshot.mistakeCount;
             state.conflicts = getAllConflicts(state.grid);
 
-            state.canUndo = past.length > 0;
-            state.canRedo = future.length > 0;
+            state.canUndo = state.past.length > 0;
+            state.canRedo = state.future.length > 0;
           });
         },
 
         redo: () => {
           set((state) => {
-            if (future.length === 0) return;
+            if (state.future.length === 0) return;
             
             // Current to past
-            past.push({
+            state.past.push({
               grid: JSON.parse(JSON.stringify(state.grid)),
               isAutoNotesUsed: state.isAutoNotesUsed,
               mistakeCount: state.mistakeCount,
             });
+            if (state.past.length > HISTORY_LIMIT) state.past.shift();
             
-            const snapshot = future.pop()!;
+            const snapshot = state.future.pop()!;
             state.grid = snapshot.grid;
             state.isAutoNotesUsed = snapshot.isAutoNotesUsed;
             state.mistakeCount = snapshot.mistakeCount;
             state.conflicts = getAllConflicts(state.grid);
 
-            state.canUndo = past.length > 0;
-            state.canRedo = future.length > 0;
+            state.canUndo = state.past.length > 0;
+            state.canRedo = state.future.length > 0;
           });
         },
 
-        initGame: (difficulty: Difficulty) => {
+        initGame: (difficulty: Difficulty, useSymmetry?: boolean) => {
           set((state) => {
+            const finalSymmetry = useSymmetry !== undefined ? useSymmetry : state.useSymmetry;
             state.difficulty = difficulty;
-            state.grid = generateNewPuzzle(difficulty);
+            state.useSymmetry = finalSymmetry;
+            state.grid = generateNewPuzzle(difficulty, finalSymmetry);
             state.selectedIndices = [];
             state.primaryIndex = null;
             state.isNoteMode = false;
@@ -123,8 +121,8 @@ export const useGameStore = create<GameState>()(
             state.mistakeCount = 0;
             state.isGameWon = false;
             
-            past = [];
-            future = [];
+            state.past = [];
+            state.future = [];
             state.canUndo = false;
             state.canRedo = false;
           });

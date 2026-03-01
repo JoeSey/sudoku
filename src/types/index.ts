@@ -10,6 +10,12 @@ export interface GameSettings {
   instantFeedback: boolean;
 }
 
+export interface Snapshot {
+  grid: Cell[];
+  isAutoNotesUsed: boolean;
+  mistakeCount: number;
+}
+
 export interface GameState {
   grid: Cell[];
   difficulty: Difficulty;
@@ -25,14 +31,17 @@ export interface GameState {
   mistakeCount: number;
   bestTimes: Record<Difficulty, { time: number; mistakes: number; autoNotes: boolean } | null>;
   isGameWon: boolean;
-  
+  useSymmetry: boolean;
+
   // History
+  past: Snapshot[];
+  future: Snapshot[];
   undo: () => void;
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
 
-  initGame: (difficulty: Difficulty) => void;
+  initGame: (difficulty: Difficulty, useSymmetry?: boolean) => void;
   setCellValue: (index: number, value: number | null) => void;
   toggleNote: (index: number, note: number) => void;
   toggleNoteMode: () => void;

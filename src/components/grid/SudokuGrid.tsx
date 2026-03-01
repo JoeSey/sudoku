@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SudokuCell } from './SudokuCell';
 import { useGameStore } from '../../store/useGameStore';
 
@@ -17,6 +17,7 @@ export const SudokuGrid: React.FC = () => {
 
   const [dragStart, setDragStart] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const getRectangleIndices = (start: number, end: number) => {
     const r1 = Math.floor(start / 9);
@@ -40,41 +41,46 @@ export const SudokuGrid: React.FC = () => {
 
   const handlePointerDown = (index: number, e: React.PointerEvent) => {
     if (e.button !== 0) return;
-    e.preventDefault();
+    
+    // Capture the pointer to receive move events even outside the cell
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    
     setDragStart(index);
     setIsDragging(true);
     setSelection([index], index);
   };
 
-  const handlePointerEnter = (index: number, e: React.PointerEvent) => {
-    if (isDragging && dragStart !== null) {
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging || dragStart === null || !gridRef.current) return;
+
+    // Determine which cell we are over based on coordinates
+    const gridRect = gridRef.current.getBoundingClientRect();
+    const x = e.clientX - gridRect.left;
+    const y = e.clientY - gridRect.top;
+
+    if (x < 0 || x >= gridRect.width || y < 0 || y >= gridRect.height) return;
+
+    const cellSize = gridRect.width / 9;
+    const col = Math.floor(x / cellSize);
+    const row = Math.floor(y / cellSize);
+    const index = row * 9 + col;
+
+    if (index >= 0 && index < 81) {
       const indices = getRectangleIndices(dragStart, index);
       setSelection(indices, index);
     }
   };
 
-  const handlePointerUp = () => {
+  const handlePointerUp = (e: React.PointerEvent) => {
     setIsDragging(false);
     setDragStart(null);
   };
 
-  useEffect(() => {
-    window.addEventListener('pointerup', handlePointerUp);
-    return () => {
-      window.removeEventListener('pointerup', handlePointerUp);
-    };
-  }, []);
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // History (Ctrl+Z, Ctrl+Shift+Z / Ctrl+Y)
     if (e.ctrlKey || e.metaKey) {
       if (e.key.toLowerCase() === 'z') {
         e.preventDefault();
-        if (e.shiftKey) {
-          redo();
-        } else {
-          undo();
-        }
+        if (e.shiftKey) redo(); else undo();
         return;
       }
       if (e.key.toLowerCase() === 'y') {
@@ -86,56 +92,34 @@ export const SudokuGrid: React.FC = () => {
 
     if (primaryIndex === null) return;
 
-    // Number input (1-9)
     if (/^[1-9]$/.test(e.key)) {
       e.preventDefault();
       const num = parseInt(e.key, 10);
-      if (isNoteMode) {
-        toggleNoteInSelection(num);
-      } else {
-        setCellValue(primaryIndex, num);
-      }
+      if (isNoteMode) toggleNoteInSelection(num); else setCellValue(primaryIndex, num);
       return;
     }
 
-    // Toggle Note Mode (N)
     if (e.key.toLowerCase() === 'n') {
       e.preventDefault();
       toggleNoteMode();
       return;
     }
 
-    // Clearing (Backspace/Delete)
     if (e.key === 'Backspace' || e.key === 'Delete') {
       e.preventDefault();
-      selectedIndices.forEach(idx => {
-        setCellValue(idx, null);
-      });
+      selectedIndices.forEach(idx => setCellValue(idx, null));
       return;
     }
 
     switch (e.key) {
-      case 'ArrowUp':
-        e.preventDefault();
-        moveSelection('up');
-        break;
-      case 'ArrowDown':
-        e.preventDefault();
-        moveSelection('down');
-        break;
-      case 'ArrowLeft':
-        e.preventDefault();
-        moveSelection('left');
-        break;
-      case 'ArrowRight':
-        e.preventDefault();
-        moveSelection('right');
-        break;
+      case 'ArrowUp': e.preventDefault(); moveSelection('up'); break;
+      case 'ArrowDown': e.preventDefault(); moveSelection('down'); break;
+      case 'ArrowLeft': e.preventDefault(); moveSelection('left'); break;
+      case 'ArrowRight': e.preventDefault(); moveSelection('right'); break;
       case 'Tab': {
         e.preventDefault();
         const direction = e.shiftKey ? -1 : 1;
         let nextIndex = (primaryIndex + direction + 81) % 81;
-
         while (grid[nextIndex].fixed) {
           nextIndex = (nextIndex + direction + 81) % 81;
           if (nextIndex === primaryIndex) break;
@@ -160,7 +144,10 @@ export const SudokuGrid: React.FC = () => {
       style={{ position: 'relative', outline: 'none' }}
     >
       <div 
+        ref={gridRef}
         className="sudoku-grid"
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
         style={{ 
           filter: isPaused ? 'blur(15px)' : 'none',
           pointerEvents: isPaused ? 'none' : 'auto',
@@ -174,7 +161,7 @@ export const SudokuGrid: React.FC = () => {
             key={index} 
             index={index} 
             onPointerDown={(e) => handlePointerDown(index, e)}
-            onPointerEnter={(e) => handlePointerEnter(index, e)}
+            onPointerEnter={() => {}} // No longer used for drag, but kept for compatibility if needed
           />
         ))}
       </div>
@@ -184,10 +171,7 @@ export const SudokuGrid: React.FC = () => {
           onClick={() => togglePause(false)}
           style={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
+            top: 0, left: 0, right: 0, bottom: 0,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

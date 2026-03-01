@@ -41,7 +41,7 @@ export const Keypad: React.FC = () => {
   return (
     <div className="keypad-container" style={{ opacity: isPaused ? 0.5 : 1, pointerEvents: isPaused ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
       <div className="keypad-grid">
-        {/* Row 1, Cols 1-5 */}
+        {/* Row 1: 1-5 + Undo */}
         {[1, 2, 3, 4, 5].map((num) => {
           const count = getDigitCount(num);
           const percentage = (Math.min(count, 9) / 9) * 100;
@@ -59,41 +59,17 @@ export const Keypad: React.FC = () => {
             </button>
           );
         })}
-        
-        {/* Undo Button - Row 1, Col 6 */}
         <button 
-          className="keypad-button history-btn"
+          className="keypad-button history-btn undo-btn"
           onClick={undo}
           disabled={!canUndo || isPaused}
           title="Undo (Ctrl+Z)"
-          style={{ opacity: canUndo ? 1 : 0.4 }}
         >
           <div className="note-icon">↶</div>
           <div className="note-label">UNDO</div>
         </button>
 
-        {/* Row 1-2, Col 7 */}
-        <button 
-          className={`keypad-button note-toggle ${isNoteMode ? 'active' : ''}`}
-          onClick={toggleNoteMode}
-          disabled={isPaused}
-        >
-          <div className="note-icon">{isNoteMode ? '📝' : '✏️'}</div>
-          <div className="note-label">NOTES</div>
-        </button>
-
-        {/* Row 1, Col 8 */}
-        <button 
-          className="keypad-button note-toggle auto-notes"
-          onClick={fillAutoNotes}
-          disabled={isPaused}
-          title="Auto Fill All Notes"
-        >
-          <div className="note-icon">🪄</div>
-          <div className="note-label">AUTO</div>
-        </button>
-
-        {/* Row 2, Cols 1-4 */}
+        {/* Row 2: 6-9 + Clear + Redo */}
         {[6, 7, 8, 9].map((num) => {
           const count = getDigitCount(num);
           const percentage = (Math.min(count, 9) / 9) * 100;
@@ -111,25 +87,39 @@ export const Keypad: React.FC = () => {
             </button>
           );
         })}
-
-        {/* Row 2, Col 5 */}
         <button className="keypad-button clear" onClick={handleClearClick} disabled={isPaused}>
           ✕
         </button>
-
-        {/* Redo Button - Row 2, Col 6 */}
         <button 
-          className="keypad-button history-btn"
+          className="keypad-button history-btn redo-btn"
           onClick={redo}
           disabled={!canRedo || isPaused}
           title="Redo (Ctrl+Shift+Z)"
-          style={{ opacity: canRedo ? 1 : 0.4 }}
         >
           <div className="note-icon">↷</div>
           <div className="note-label">REDO</div>
         </button>
 
-        {/* Row 2, Col 8 */}
+        {/* Row 3: Notes (Long) + Auto + Erase */}
+        <button 
+          className={`keypad-button note-toggle main-notes-btn ${isNoteMode ? 'active' : ''}`}
+          onClick={toggleNoteMode}
+          disabled={isPaused}
+        >
+          <div className="note-icon">{isNoteMode ? '📝' : '✏️'}</div>
+          <div className="note-label">NOTE MODE: {isNoteMode ? 'ON' : 'OFF'}</div>
+        </button>
+
+        <button 
+          className="keypad-button note-toggle auto-notes"
+          onClick={fillAutoNotes}
+          disabled={isPaused}
+          title="Auto Fill All Notes"
+        >
+          <div className="note-icon">🪄</div>
+          <div className="note-label">AUTO</div>
+        </button>
+
         <button 
           className="keypad-button note-toggle erase-notes"
           onClick={clearAllNotes}
