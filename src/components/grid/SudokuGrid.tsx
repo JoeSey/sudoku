@@ -5,7 +5,7 @@ import { useGameStore } from '../../store/useGameStore';
 export const SudokuGrid: React.FC = () => {
   const moveSelection = useGameStore((state) => state.moveSelection);
   const setCellValue = useGameStore((state) => state.setCellValue);
-  const toggleNote = useGameStore((state) => state.toggleNote);
+  const toggleNoteInSelection = useGameStore((state) => state.toggleNoteInSelection);
   const toggleNoteMode = useGameStore((state) => state.toggleNoteMode);
   const isNoteMode = useGameStore((state) => state.isNoteMode);
   const setSelection = useGameStore((state) => state.setSelection);
@@ -68,13 +68,11 @@ export const SudokuGrid: React.FC = () => {
     if (/^[1-9]$/.test(e.key)) {
       e.preventDefault();
       const num = parseInt(e.key, 10);
-      selectedIndices.forEach(idx => {
-        if (isNoteMode) {
-          toggleNote(idx, num);
-        } else {
-          setCellValue(idx, num);
-        }
-      });
+      if (isNoteMode) {
+        toggleNoteInSelection(num);
+      } else {
+        setCellValue(primaryIndex, num);
+      }
       return;
     }
 
@@ -128,23 +126,72 @@ export const SudokuGrid: React.FC = () => {
     }
   };
 
+  const isPaused = useGameStore((state) => state.isPaused);
+  const togglePause = useGameStore((state) => state.togglePause);
+
   // Array of 81 indices
   const indices = Array.from({ length: 81 }, (_, i) => i);
 
   return (
     <div 
-      className="sudoku-grid"
+      className="sudoku-grid-container"
       onKeyDown={handleKeyDown}
       role="grid"
+      tabIndex={0}
+      style={{ position: 'relative', outline: 'none' }}
     >
-      {indices.map((index) => (
-        <SudokuCell 
-          key={index} 
-          index={index} 
-          onMouseDown={() => handleMouseDown(index)}
-          onMouseEnter={() => handleMouseEnter(index)}
-        />
-      ))}
+      <div 
+        className="sudoku-grid"
+        style={{ 
+          filter: isPaused ? 'blur(15px)' : 'none',
+          pointerEvents: isPaused ? 'none' : 'auto',
+          transition: 'filter 0.3s ease',
+          margin: '0 auto' // Override index.css margin to control it via container
+        }}
+      >
+        {indices.map((index) => (
+          <SudokuCell 
+            key={index} 
+            index={index} 
+            onMouseDown={() => handleMouseDown(index)}
+            onMouseEnter={() => handleMouseEnter(index)}
+          />
+        ))}
+      </div>
+      
+      {isPaused && (
+        <div 
+          onClick={() => togglePause(false)}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.4)',
+            cursor: 'pointer',
+            zIndex: 10,
+            backdropFilter: 'blur(5px)',
+            borderRadius: '4px'
+          }}
+        >
+          <div style={{
+            padding: '15px 30px',
+            backgroundColor: '#1a1a1a',
+            color: '#fff',
+            textTransform: 'uppercase',
+            letterSpacing: '0.2em',
+            fontSize: '1rem',
+            fontWeight: 300,
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+          }}>
+            Paused
+          </div>
+        </div>
+      )}
     </div>
   );
 };
