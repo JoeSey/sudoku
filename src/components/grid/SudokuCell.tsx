@@ -6,33 +6,30 @@ import { PencilGrid } from './PencilGrid';
 
 interface SudokuCellProps {
   index: number;
+  onMouseDown: () => void;
+  onMouseEnter: () => void;
 }
 
-export const SudokuCell: React.FC<SudokuCellProps> = ({ index }) => {
+export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onMouseDown, onMouseEnter }) => {
   const cell = useGameStore((state) => state.grid[index]);
-  const isSelected = useGameStore((state) => state.selectedCellIndex === index);
+  const isSelected = useGameStore((state) => state.selectedIndices.includes(index));
+  const isPrimary = useGameStore((state) => state.primaryIndex === index);
   const isConflicting = useGameStore((state) => state.conflicts.includes(index));
   const isRelated = useGameStore((state) => 
-    state.selectedCellIndex !== null && areRelated(state.selectedCellIndex, index)
+    state.primaryIndex !== null && areRelated(state.primaryIndex, index)
   );
   const isIdentical = useGameStore((state) => {
-    const selectedCell = state.selectedCellIndex !== null ? state.grid[state.selectedCellIndex] : null;
-    return selectedCell && areIdenticalValue(selectedCell.value, cell?.value ?? null) && state.selectedCellIndex !== index;
+    const primaryCell = state.primaryIndex !== null ? state.grid[state.primaryIndex] : null;
+    return primaryCell && areIdenticalValue(primaryCell.value, cell?.value ?? null) && state.primaryIndex !== index;
   });
 
-  const setSelectedCellIndex = useGameStore((state) => state.setSelectedCellIndex);
-  
   const cellRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isSelected && cellRef.current) {
+    if (isPrimary && cellRef.current) {
       cellRef.current.focus();
     }
-  }, [isSelected]);
-
-  const handleClick = () => {
-    setSelectedCellIndex(index);
-  };
+  }, [isPrimary]);
 
   return (
     <div
@@ -41,12 +38,14 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index }) => {
         'fixed': cell?.fixed,
         'user-input': !cell?.fixed && cell?.value !== null,
         'selected': isSelected,
+        'primary': isPrimary,
         'highlight-related': isRelated,
         'highlight-identical': isIdentical,
         'conflict': isConflicting,
       })}
-      tabIndex={isSelected ? 0 : index === 0 && !useGameStore.getState().selectedCellIndex ? 0 : -1}
-      onClick={handleClick}
+      tabIndex={isPrimary ? 0 : index === 0 && !useGameStore.getState().primaryIndex ? 0 : -1}
+      onMouseDown={onMouseDown}
+      onMouseEnter={onMouseEnter}
       role="gridcell"
       aria-selected={isSelected}
     >
@@ -58,4 +57,3 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index }) => {
     </div>
   );
 };
-

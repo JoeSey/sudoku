@@ -85,8 +85,17 @@ h1 {
 
 /* Highlights */
 .sudoku-cell.selected {
+  background-color: rgba(59, 130, 246, 0.4) !important;
+  color: #1a1a1a !important;
+}
+
+.sudoku-cell.selected.primary {
   background-color: #3b82f6 !important;
   color: #ffffff !important;
+}
+
+.sudoku-cell.selected.user-input:not(.primary) {
+  color: #2563eb !important;
 }
 
 .sudoku-cell.highlight-related {
