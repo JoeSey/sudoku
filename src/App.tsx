@@ -14,6 +14,7 @@ function App() {
   const isGameWon = useGameStore((state) => state.isGameWon);
   const togglePause = useGameStore((state) => state.togglePause);
   const setGameWon = useGameStore((state) => state.setGameWon);
+  const difficulty = useGameStore((state) => state.difficulty);
 
   const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
 
@@ -81,7 +82,25 @@ function App() {
       backgroundColor: '#fff',
       color: '#000'
     }}>
-      <h1 style={{ margin: 0, letterSpacing: '0.2em' }}>SUDOKU</h1>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        width: '100%',
+        maxWidth: '500px',
+        padding: '0 10px'
+      }}>
+        <h1 style={{ margin: 0, letterSpacing: '0.2em' }}>SUDOKU</h1>
+        <span style={{ 
+          fontSize: '0.9rem', 
+          fontWeight: 'bold', 
+          color: '#000', 
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em'
+        }}>
+          {difficulty}
+        </span>
+      </div>
       <GameInfo onNewGame={handleNewGame} />
       <SudokuGrid />
       <Keypad />

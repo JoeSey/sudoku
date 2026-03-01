@@ -8,7 +8,6 @@ interface GameInfoProps {
 export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
   const timer = useGameStore((state) => state.timer);
   const mistakeCount = useGameStore((state) => state.mistakeCount);
-  const difficulty = useGameStore((state) => state.difficulty);
   const isPaused = useGameStore((state) => state.isPaused);
   const isZenMode = useGameStore((state) => state.isZenMode);
   const togglePause = useGameStore((state) => state.togglePause);
@@ -44,7 +43,6 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
           >
             New Game
           </button>
-          <span style={{ color: '#000', fontWeight: 'bold' }}>{difficulty}</span>
           <button 
             onClick={toggleZenMode}
             className={isZenMode ? 'text-black font-bold' : 'hover:text-black transition-colors'}
