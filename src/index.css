@@ -505,14 +505,15 @@ h1 {
 }
 
 .sudoku-cell.hint-target {
-  background-color: #f5f3ff;
-  outline: 2px solid #7c3aed;
-  outline-offset: -2px;
-  z-index: 5;
+  background-color: #d8b4fe !important; /* More vivid purple for target */
+  outline: 3px solid #7c3aed !important;
+  outline-offset: -3px;
+  z-index: 10;
 }
 
 .sudoku-cell.hint-reason {
-  background-color: #fef3c7;
+  background-color: #fef3c7 !important; /* Soft Logic Gold/Amber */
+  z-index: 5;
 }
 
 .pencil-note.strike-through {
