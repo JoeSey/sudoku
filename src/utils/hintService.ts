@@ -28,40 +28,38 @@ export const getNextHint = (grid: Cell[]): Hint | null => {
     : "Logical Deduction";
 
   // Use the first few steps to build a more comprehensive hint
-  // If the library identifies a cell to fill, it's usually the first 'value' step
-  const valueStep = result.steps.find(s => s.type === 'value');
-  const eliminationSteps = result.steps.filter(s => s.type === 'elimination');
+  // sudoku-core v3 returns steps with an 'updates' array
+  const firstStep = result.steps[0];
+  const stepType = (firstStep as any).type;
+  const stepStrategy = (firstStep as any).strategy || strategyTitle;
+  const updates = (firstStep as any).updates || [];
 
-  if (valueStep) {
-    const { row, col, value } = valueStep;
-    const index = row * 9 + col;
-    
-    // If the step has a more specific strategy, use it (depends on library version/fork)
-    const stepStrategy = (valueStep as any).strategy || strategyTitle;
+  if (stepType === 'value' && updates.length > 0) {
+    const update = updates[0];
+    const index = update.index;
+    const value = update.filledValue;
     
     return {
       strategy: stepStrategy,
       description: getStrategyDescription(stepStrategy, value),
       targetIndices: [index],
-      reasonIndices: [], // TODO: Future refinement
+      reasonIndices: [], 
       value,
     };
   }
 
-  if (eliminationSteps.length > 0) {
-    const { row, col, value } = eliminationSteps[0];
-    const index = row * 9 + col;
-    const stepStrategy = (eliminationSteps[0] as any).strategy || strategyTitle;
+  if (stepType === 'elimination' && updates.length > 0) {
+    const eliminates = updates.map((u: any) => ({
+      index: u.index,
+      value: u.eliminatedValue
+    }));
 
     return {
       strategy: stepStrategy,
-      description: getStrategyDescription(stepStrategy, value, true),
-      targetIndices: [index],
+      description: getStrategyDescription(stepStrategy, updates[0].eliminatedValue, true),
+      targetIndices: [updates[0].index],
       reasonIndices: [],
-      eliminates: eliminationSteps.map(s => ({ 
-        index: s.row * 9 + s.col, 
-        value: s.value 
-      })),
+      eliminates,
     };
   }
 
