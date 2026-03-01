@@ -17,6 +17,7 @@ export const WinOverlay: React.FC<WinOverlayProps> = ({ onNewGame }) => {
   const difficulty = useGameStore((state) => state.difficulty);
   const isGameWon = useGameStore((state) => state.isGameWon);
   const isAutoNotesUsed = useGameStore((state) => state.isAutoNotesUsed);
+  const isAssisted = useGameStore((state) => state.isAssisted);
 
   if (!isGameWon) return null;
 
@@ -34,7 +35,8 @@ export const WinOverlay: React.FC<WinOverlayProps> = ({ onNewGame }) => {
             <span>Time</span>
             <span className="stat-value">
               {formatTime(timer)}
-              {isAutoNotesUsed && <span className="badge-auto" title="Auto Notes Used">A</span>}
+              {isAutoNotesUsed && <span className="badge-auto" title="Auto Notes Used">AUTO</span>}
+              {isAssisted && <span className="badge-hint" title="Logic Hint Used">HINT</span>}
             </span>
           </p>
           <p className="stat-row" style={{ borderBottom: 'none' }}>

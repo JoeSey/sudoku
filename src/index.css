@@ -253,11 +253,26 @@ h1 {
   color: #6b7280;
   font-size: 0.6rem;
   font-weight: 800;
-  width: 14px;
-  height: 14px;
+  padding: 1px 4px;
   border-radius: 2px;
   margin-left: 4px;
   border: 1px solid #e5e5e5;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.badge-hint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fdf2f2;
+  color: #991b1b;
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-left: 4px;
+  border: 1px solid #fee2e2;
   vertical-align: middle;
   line-height: 1;
 }
