@@ -13,6 +13,7 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
   const togglePause = useGameStore((state) => state.togglePause);
   const toggleZenMode = useGameStore((state) => state.toggleZenMode);
   const showHint = useGameStore((state) => state.showHint);
+  const settings = useGameStore((state) => state.settings);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -50,27 +51,29 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
           >
             {isZenMode ? 'ZEN: ON' : 'ZEN: OFF'}
           </button>
-          <button 
-            onClick={showHint}
-            className="hover:bg-purple-50 transition-colors"
-            title="Get Logic Hint"
-            style={{ 
-              background: '#f5f3ff', 
-              border: '1px solid #7c3aed', 
-              borderRadius: '50%', 
-              cursor: 'pointer', 
-              width: '24px',
-              height: '24px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: '0.8rem', 
-              fontWeight: 'bold',
-              color: '#7c3aed'
-            }}
-          >
-            ?
-          </button>
+          {settings.showHintButton && (
+            <button 
+              onClick={showHint}
+              className="hover:bg-purple-50 transition-colors"
+              title="Get Logic Hint"
+              style={{ 
+                background: '#f5f3ff', 
+                border: '1px solid #7c3aed', 
+                borderRadius: '50%', 
+                cursor: 'pointer', 
+                width: '24px',
+                height: '24px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '0.8rem', 
+                fontWeight: 'bold',
+                color: '#7c3aed'
+              }}
+            >
+              ?
+            </button>
+          )}
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>

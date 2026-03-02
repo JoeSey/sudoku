@@ -1,7 +1,11 @@
 import React from 'react';
 import { useGameStore } from '../../store/useGameStore';
 
-export const Keypad: React.FC = () => {
+interface KeypadProps {
+  onSettingsClick?: () => void;
+}
+
+export const Keypad: React.FC<KeypadProps> = ({ onSettingsClick }) => {
   const grid = useGameStore((state) => state.grid);
   const primaryIndex = useGameStore((state) => state.primaryIndex);
   const selectedIndices = useGameStore((state) => state.selectedIndices);
@@ -101,14 +105,24 @@ export const Keypad: React.FC = () => {
           <div className="note-label">REDO</div>
         </button>
 
-        {/* Row 3: Notes (Long) + Auto + Erase */}
+        {/* Row 3: Notes + Settings + Auto + Erase */}
         <button 
           className={`keypad-button note-toggle main-notes-btn ${isNoteMode ? 'active' : ''}`}
           onClick={toggleNoteMode}
           disabled={isPaused}
         >
           <div className="note-icon">{isNoteMode ? '📝' : '✏️'}</div>
-          <div className="note-label">NOTE MODE: {isNoteMode ? 'ON' : 'OFF'}</div>
+          <div className="note-label">NOTE: {isNoteMode ? 'ON' : 'OFF'}</div>
+        </button>
+
+        <button 
+          className="keypad-button note-toggle settings-btn"
+          onClick={onSettingsClick}
+          disabled={isPaused}
+          title="Open Settings"
+        >
+          <div className="note-icon">⚙️</div>
+          <div className="note-label">SET</div>
         </button>
 
         <button 

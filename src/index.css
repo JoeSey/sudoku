@@ -125,10 +125,35 @@ h1 {
   background-color: #f2f2f2; /* Distinct light gray for row/col/block highlighting */
 }
 
+/* Blue Highlights */
+.sudoku-cell.highlight-related.blue { background-color: #eff6ff; }
+.sudoku-cell.highlight-identical.blue { background-color: #dbeafe; }
+.pencil-note.highlighted.blue { background-color: #3b82f6; color: #fff; }
+
+/* Green Highlights */
+.sudoku-cell.highlight-related.green { background-color: #f0fdf4; }
+.sudoku-cell.highlight-identical.green { background-color: #dcfce7; }
+.pencil-note.highlighted.green { background-color: #22c55e; color: #fff; }
+
+/* Red Highlights */
+.sudoku-cell.highlight-related.red { background-color: #fef2f2; }
+.sudoku-cell.highlight-identical.red { background-color: #fee2e2; }
+.pencil-note.highlighted.red { background-color: #ef4444; color: #fff; }
+
 .sudoku-cell.highlight-identical {
   background-color: #e0e0e0; /* Distinct gray for same number */
   font-weight: 500;
 }
+
+/* Color Overrides */
+.sudoku-cell.blue { background-color: #dbeafe !important; }
+.sudoku-cell.green { background-color: #dcfce7 !important; }
+.sudoku-cell.red { background-color: #fee2e2 !important; }
+
+/* Pencil note overrides */
+.pencil-note.highlighted.blue { background-color: #3b82f6 !important; color: #fff !important; }
+.pencil-note.highlighted.green { background-color: #22c55e !important; color: #fff !important; }
+.pencil-note.highlighted.red { background-color: #ef4444 !important; color: #fff !important; }
 
 .sudoku-cell.conflict {
   background-color: #fee2e2 !important; /* Soft red background for errors */
@@ -221,12 +246,17 @@ h1 {
 }
 
 .keypad-button.note-toggle.main-notes-btn {
-  grid-column: 1 / span 4;
+  grid-column: 1 / span 3;
   grid-row: 3;
   width: 100%;
   border-radius: 2rem;
   flex-direction: row;
   gap: 0.5rem;
+}
+
+.keypad-button.note-toggle.settings-btn {
+  grid-column: 4;
+  grid-row: 3;
 }
 
 .keypad-button.note-toggle.auto-notes {

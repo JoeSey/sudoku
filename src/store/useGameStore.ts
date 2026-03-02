@@ -43,6 +43,9 @@ export const useGameStore = create<GameState>()(
         activeHint: null,
         settings: {
           instantFeedback: true,
+          normalHighlightColor: 'gray',
+          zenHighlightColor: 'gray',
+          showHintButton: true,
         },
         conflicts: [],
         lastCleanedIndices: [],
@@ -61,6 +64,12 @@ export const useGameStore = create<GameState>()(
         future: [],
         canUndo: false,
         canRedo: false,
+
+        updateSettings: (newSettings: Partial<GameSettings>) => {
+          set((state) => {
+            state.settings = { ...state.settings, ...newSettings };
+          });
+        },
 
         toggleZenMode: () => {
           set((state) => {

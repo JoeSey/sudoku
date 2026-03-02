@@ -6,6 +6,7 @@ import { GameInfo } from './components/ui/GameInfo';
 import { WinOverlay } from './components/ui/WinOverlay';
 import { NewGameModal } from './components/ui/NewGameModal';
 import { HintExplanation } from './components/ui/HintExplanation';
+import { SettingsModal } from './components/ui/SettingsModal';
 
 function App() {
   const initGame = useGameStore((state) => state.initGame);
@@ -17,6 +18,7 @@ function App() {
   const difficulty = useGameStore((state) => state.difficulty);
 
   const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   useEffect(() => {
     // Open New Game modal on first load if the grid is empty
@@ -103,7 +105,7 @@ function App() {
       </div>
       <GameInfo onNewGame={handleNewGame} />
       <SudokuGrid />
-      <Keypad />
+      <Keypad onSettingsClick={() => setIsSettingsModalOpen(true)} />
       
       <HintExplanation />
       <WinOverlay onNewGame={handleNewGame} />
@@ -111,6 +113,10 @@ function App() {
         isOpen={isNewGameModalOpen} 
         onClose={() => setIsNewGameModalOpen(false)} 
         onStartGame={startNewGame} 
+      />
+      <SettingsModal 
+        isOpen={isSettingsModalOpen} 
+        onClose={() => setIsSettingsModalOpen(false)} 
       />
     </div>
   )

@@ -6,8 +6,13 @@ export interface Cell {
   notes: number[];
 }
 
+export type HighlightColor = 'gray' | 'blue' | 'green' | 'red';
+
 export interface GameSettings {
   instantFeedback: boolean;
+  normalHighlightColor: HighlightColor;
+  zenHighlightColor: HighlightColor;
+  showHintButton: boolean;
 }
 
 export interface Snapshot {
@@ -74,4 +79,5 @@ export interface GameState {
   saveBestTime: () => void;
   showHint: () => void;
   clearHint: () => void;
+  updateSettings: (settings: Partial<GameSettings>) => void;
 }

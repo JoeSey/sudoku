@@ -32,7 +32,10 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
   );
   const isCleaned = useGameStore((state) => state.lastCleanedIndices.includes(index));
   const isZenMode = useGameStore((state) => state.isZenMode);
+  const settings = useGameStore((state) => state.settings);
   const setCellValue = useGameStore((state) => state.setCellValue);
+
+  const highlightColor = isZenMode ? settings.zenHighlightColor : settings.normalHighlightColor;
 
   const cellRef = useRef<HTMLDivElement>(null);
   const lastTap = useRef(0);
@@ -72,6 +75,7 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
         'cleaned-pulse': isCleaned,
         'hint-target': isHintTarget,
         'hint-reason': isHintReason,
+        [highlightColor]: highlightColor !== 'gray' && ((!isZenMode && (isRelated || isIdentical)) || (isZenMode && (isRelated || isIdentical)))
       })}
       tabIndex={isPrimary ? 0 : index === 0 && !useGameStore.getState().primaryIndex ? 0 : -1}
       onPointerDown={handlePointerDown}
@@ -86,6 +90,7 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
           notes={cell?.notes ?? []} 
           highlightValue={primaryValue} 
           strikeThroughValue={strikeThroughValue}
+          highlightColor={highlightColor}
         />
       )}
     </div>
