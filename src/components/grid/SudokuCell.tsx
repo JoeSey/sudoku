@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useGameStore } from '../../store/useGameStore';
 import classNames from 'classnames';
-import { areRelated, areIdenticalValue } from '../../utils/sudokuUtils';
+import { areInSameLine, areInSameBlock, areIdenticalValue } from '../../utils/sudokuUtils';
 import { PencilGrid } from './PencilGrid';
 
 interface SudokuCellProps {
@@ -15,8 +15,11 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
   const isSelected = useGameStore((state) => state.selectedIndices.includes(index));
   const isPrimary = useGameStore((state) => state.primaryIndex === index);
   const isConflicting = useGameStore((state) => state.conflicts.includes(index));
-  const isRelated = useGameStore((state) => 
-    state.primaryIndex !== null && areRelated(state.primaryIndex, index)
+  const isRelatedLine = useGameStore((state) => 
+    state.primaryIndex !== null && areInSameLine(state.primaryIndex, index)
+  );
+  const isRelatedBlock = useGameStore((state) => 
+    state.primaryIndex !== null && areInSameBlock(state.primaryIndex, index)
   );
   const isIdentical = useGameStore((state) => {
     const primaryCell = state.primaryIndex !== null ? state.grid[state.primaryIndex] : null;
@@ -69,13 +72,14 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
         'user-input': !cell?.fixed && cell?.value !== null,
         'selected': isSelected,
         'primary': isPrimary,
-        'highlight-related': !isZenMode && isRelated,
+        'highlight-related': !isZenMode && isRelatedLine,
+        'highlight-block': !isZenMode && isRelatedBlock,
         'highlight-identical': !isZenMode && isIdentical,
         'conflict': !isZenMode && isConflicting,
         'cleaned-pulse': isCleaned,
         'hint-target': isHintTarget,
         'hint-reason': isHintReason,
-        [highlightColor]: highlightColor !== 'gray' && ((!isZenMode && (isRelated || isIdentical)) || (isZenMode && (isRelated || isIdentical)))
+        [highlightColor]: highlightColor !== 'gray' && (isRelatedLine || isRelatedBlock || isIdentical || isPrimary)
       })}
       tabIndex={isPrimary ? 0 : index === 0 && !useGameStore.getState().primaryIndex ? 0 : -1}
       onPointerDown={handlePointerDown}

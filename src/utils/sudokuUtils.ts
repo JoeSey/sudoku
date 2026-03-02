@@ -178,6 +178,19 @@ export const gridTo2D = (grid: Cell[]): number[][] => {
 };
 
 export const areRelated = (index1: number, index2: number): boolean => {
+  return areInSameLine(index1, index2) || areInSameBlock(index1, index2);
+};
+
+export const areInSameLine = (index1: number, index2: number): boolean => {
+  if (index1 === index2) return false;
+  const r1 = Math.floor(index1 / 9);
+  const c1 = index1 % 9;
+  const r2 = Math.floor(index2 / 9);
+  const c2 = index2 % 9;
+  return r1 === r2 || c1 === c2;
+};
+
+export const areInSameBlock = (index1: number, index2: number): boolean => {
   if (index1 === index2) return false;
   const r1 = Math.floor(index1 / 9);
   const c1 = index1 % 9;
@@ -185,7 +198,7 @@ export const areRelated = (index1: number, index2: number): boolean => {
   const r2 = Math.floor(index2 / 9);
   const c2 = index2 % 9;
   const b2 = Math.floor(r2 / 3) * 3 + Math.floor(c2 / 3);
-  return r1 === r2 || c1 === c2 || b1 === b2;
+  return b1 === b2;
 };
 
 export const areIdenticalValue = (val1: number | null, val2: number | null): boolean => {

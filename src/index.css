@@ -116,44 +116,59 @@ h1 {
   background-color: #e5e5e5 !important; /* Light gray selection */
 }
 
-.sudoku-cell.selected.primary {
-  background-color: #d4d4d4 !important; /* Slightly darker gray for primary */
-  color: #000000 !important;
+/* Highlight Variables & Themes */
+.sudoku-cell {
+  --line-bg: #f2f2f2;
+  --block-bg: #fafafa;
+  --primary-bg: #d4d4d4;
+  --identical-bg: #e0e0e0;
+  --pencil-bg: #6b7280;
+}
+
+.sudoku-cell.blue {
+  --line-bg: #dbeafe;
+  --block-bg: #eff6ff;
+  --primary-bg: #93c5fd;
+  --identical-bg: #bfdbfe;
+  --pencil-bg: #3b82f6;
+}
+
+.sudoku-cell.green {
+  --line-bg: #dcfce7;
+  --block-bg: #f0fdf4;
+  --primary-bg: #86efac;
+  --identical-bg: #bbf7d0;
+  --pencil-bg: #22c55e;
+}
+
+.sudoku-cell.red {
+  --line-bg: #fee2e2;
+  --block-bg: #fef2f2;
+  --primary-bg: #fca5a5;
+  --identical-bg: #fecaca;
+  --pencil-bg: #ef4444;
 }
 
 .sudoku-cell.highlight-related {
-  background-color: #f2f2f2; /* Distinct light gray for row/col/block highlighting */
+  background-color: var(--line-bg);
 }
 
-/* Blue Highlights */
-.sudoku-cell.highlight-related.blue { background-color: #eff6ff; }
-.sudoku-cell.highlight-identical.blue { background-color: #dbeafe; }
-.pencil-note.highlighted.blue { background-color: #3b82f6; color: #fff; }
-
-/* Green Highlights */
-.sudoku-cell.highlight-related.green { background-color: #f0fdf4; }
-.sudoku-cell.highlight-identical.green { background-color: #dcfce7; }
-.pencil-note.highlighted.green { background-color: #22c55e; color: #fff; }
-
-/* Red Highlights */
-.sudoku-cell.highlight-related.red { background-color: #fef2f2; }
-.sudoku-cell.highlight-identical.red { background-color: #fee2e2; }
-.pencil-note.highlighted.red { background-color: #ef4444; color: #fff; }
+.sudoku-cell.highlight-block {
+  background-color: var(--block-bg);
+}
 
 .sudoku-cell.highlight-identical {
-  background-color: #e0e0e0; /* Distinct gray for same number */
+  background-color: var(--identical-bg);
   font-weight: 500;
 }
 
-/* Color Overrides */
-.sudoku-cell.blue { background-color: #dbeafe !important; }
-.sudoku-cell.green { background-color: #dcfce7 !important; }
-.sudoku-cell.red { background-color: #fee2e2 !important; }
+.sudoku-cell.selected.primary {
+  background-color: var(--primary-bg) !important;
+  color: #000000 !important;
+}
 
 /* Pencil note overrides */
-.pencil-note.highlighted.blue { background-color: #3b82f6 !important; color: #fff !important; }
-.pencil-note.highlighted.green { background-color: #22c55e !important; color: #fff !important; }
-.pencil-note.highlighted.red { background-color: #ef4444 !important; color: #fff !important; }
+.pencil-note.highlighted { background-color: var(--pencil-bg) !important; color: #fff !important; }
 
 .sudoku-cell.conflict {
   background-color: #fee2e2 !important; /* Soft red background for errors */
