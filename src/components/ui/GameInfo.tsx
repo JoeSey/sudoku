@@ -46,10 +46,19 @@ export const GameInfo: React.FC<GameInfoProps> = ({ onNewGame }) => {
           </button>
           <button 
             onClick={toggleZenMode}
-            className={isZenMode ? 'text-black font-bold' : 'hover:text-black transition-colors'}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, textTransform: 'uppercase', font: 'inherit' }}
+            className="transition-colors"
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer', 
+              padding: 0, 
+              textTransform: 'uppercase', 
+              font: 'inherit',
+              color: isZenMode ? '#000' : '#666',
+              fontWeight: isZenMode ? 'bold' : 'normal'
+            }}
           >
-            {isZenMode ? 'ZEN: ON' : 'ZEN: OFF'}
+            Zen
           </button>
           {settings.showHintButton && (
             <button 
