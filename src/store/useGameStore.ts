@@ -476,6 +476,10 @@ export const useGameStore = create<GameState>()(
       name: 'sudoku-storage',
       storage: createJSONStorage(() => localStorage),
       version: 1,
+      partialize: (state) => {
+        const { past, future, ...rest } = state;
+        return rest;
+      },
     }
   )
 );

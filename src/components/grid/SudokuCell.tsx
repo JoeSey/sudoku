@@ -10,7 +10,7 @@ interface SudokuCellProps {
   onPointerEnter: (e: React.PointerEvent) => void;
 }
 
-export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, onPointerEnter }) => {
+export const SudokuCell: React.FC<SudokuCellProps> = React.memo(({ index, onPointerDown, onPointerEnter }) => {
   const cell = useGameStore((state) => state.grid[index]);
   const isSelected = useGameStore((state) => state.selectedIndices.includes(index));
   const isPrimary = useGameStore((state) => state.primaryIndex === index);
@@ -97,4 +97,6 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
       )}
     </div>
   );
-};
+});
+
+SudokuCell.displayName = 'SudokuCell';
