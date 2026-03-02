@@ -1,4 +1,4 @@
-import { hint, Board, SolvingResult } from 'sudoku-core';
+import { hint, Board } from 'sudoku-core';
 import { Cell } from '../types';
 
 export interface Hint {
@@ -16,7 +16,7 @@ export const gridToCoreBoard = (grid: Cell[]): Board => {
 
 export const getNextHint = (grid: Cell[]): Hint | null => {
   const coreBoard = gridToCoreBoard(grid);
-  const result: SolvingResult = hint(coreBoard);
+  const result: any = hint(coreBoard);
 
   if (!result || !result.steps || result.steps.length === 0) {
     return null;

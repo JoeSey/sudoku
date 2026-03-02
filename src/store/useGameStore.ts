@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { GameState, Cell, Difficulty, Snapshot } from '../types';
+import { GameState, Cell, Difficulty, Snapshot, GameSettings } from '../types';
 import { generateNewPuzzle, checkBoardValidity, getAllConflicts } from '../utils/sudokuUtils';
 import { getNextHint } from '../utils/hintService';
 
