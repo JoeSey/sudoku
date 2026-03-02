@@ -17,6 +17,7 @@ const fixMimeTypes = () => ({
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/sudoku/',
   plugins: [react(), fixMimeTypes()],
   server: {
     host: true,
