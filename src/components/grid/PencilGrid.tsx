@@ -5,10 +5,9 @@ interface PencilGridProps {
   notes: number[];
   highlightValue?: number | null;
   strikeThroughValue?: number | null;
-  highlightColor?: string;
 }
 
-export const PencilGrid: React.FC<PencilGridProps> = ({ notes, highlightValue, strikeThroughValue, highlightColor }) => {
+export const PencilGrid: React.FC<PencilGridProps> = ({ notes, highlightValue, strikeThroughValue }) => {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   return (
@@ -21,7 +20,6 @@ export const PencilGrid: React.FC<PencilGridProps> = ({ notes, highlightValue, s
             'hidden': !notes.includes(num),
             'highlighted': highlightValue === num,
             'strike-through': strikeThroughValue === num,
-            [highlightColor || 'gray']: highlightValue === num && highlightColor !== 'gray',
           })}
         >
           {num}

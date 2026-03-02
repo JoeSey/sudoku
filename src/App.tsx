@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import classNames from 'classnames';
 import { useGameStore } from './store/useGameStore';
 import { SudokuGrid } from './components/grid/SudokuGrid';
 import { Keypad } from './components/ui/Keypad';
@@ -16,6 +17,10 @@ function App() {
   const togglePause = useGameStore((state) => state.togglePause);
   const setGameWon = useGameStore((state) => state.setGameWon);
   const difficulty = useGameStore((state) => state.difficulty);
+  const settings = useGameStore((state) => state.settings);
+  const isZenMode = useGameStore((state) => state.isZenMode);
+
+  const highlightColor = isZenMode ? settings.zenHighlightColor : settings.normalHighlightColor;
 
   const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -74,7 +79,7 @@ function App() {
   }, [togglePause, isGameWon, isNewGameModalOpen]);
 
   return (
-    <div className="App" style={{
+    <div className={classNames('App', highlightColor)} style={{
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',

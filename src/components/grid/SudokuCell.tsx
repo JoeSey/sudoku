@@ -79,7 +79,6 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
         'cleaned-pulse': isCleaned,
         'hint-target': isHintTarget,
         'hint-reason': isHintReason,
-        [highlightColor]: highlightColor !== 'gray' && (isRelatedLine || isRelatedBlock || isIdentical || isPrimary)
       })}
       tabIndex={isPrimary ? 0 : index === 0 && !useGameStore.getState().primaryIndex ? 0 : -1}
       onPointerDown={handlePointerDown}
@@ -94,7 +93,6 @@ export const SudokuCell: React.FC<SudokuCellProps> = ({ index, onPointerDown, on
           notes={cell?.notes ?? []} 
           highlightValue={primaryValue} 
           strikeThroughValue={strikeThroughValue}
-          highlightColor={highlightColor}
         />
       )}
     </div>

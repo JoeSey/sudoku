@@ -117,7 +117,7 @@ h1 {
 }
 
 /* Highlight Variables & Themes */
-.sudoku-cell {
+.App {
   --line-bg: #f2f2f2;
   --block-bg: #fafafa;
   --primary-bg: #d4d4d4;
@@ -125,36 +125,36 @@ h1 {
   --pencil-bg: #6b7280;
 }
 
-.sudoku-cell.blue {
-  --line-bg: #dbeafe;
+.App.blue {
+  --line-bg: #bfdbfe;
   --block-bg: #eff6ff;
-  --primary-bg: #93c5fd;
-  --identical-bg: #bfdbfe;
+  --primary-bg: #60a5fa;
+  --identical-bg: #dbeafe;
   --pencil-bg: #3b82f6;
 }
 
-.sudoku-cell.green {
-  --line-bg: #dcfce7;
+.App.green {
+  --line-bg: #bbf7d0;
   --block-bg: #f0fdf4;
-  --primary-bg: #86efac;
-  --identical-bg: #bbf7d0;
+  --primary-bg: #4ade80;
+  --identical-bg: #dcfce7;
   --pencil-bg: #22c55e;
 }
 
-.sudoku-cell.red {
-  --line-bg: #fee2e2;
+.App.red {
+  --line-bg: #fecaca;
   --block-bg: #fef2f2;
-  --primary-bg: #fca5a5;
-  --identical-bg: #fecaca;
+  --primary-bg: #f87171;
+  --identical-bg: #fee2e2;
   --pencil-bg: #ef4444;
-}
-
-.sudoku-cell.highlight-related {
-  background-color: var(--line-bg);
 }
 
 .sudoku-cell.highlight-block {
   background-color: var(--block-bg);
+}
+
+.sudoku-cell.highlight-related {
+  background-color: var(--line-bg);
 }
 
 .sudoku-cell.highlight-identical {
