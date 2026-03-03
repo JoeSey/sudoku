@@ -96,6 +96,10 @@ h1 {
   cursor: pointer;
 }
 
+.sudoku-cell:focus {
+  outline: none;
+}
+
 .sudoku-cell.fixed {
   background-color: #fafafa;
   color: #000000;

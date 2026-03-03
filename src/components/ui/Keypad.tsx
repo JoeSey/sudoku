@@ -22,6 +22,9 @@ export const Keypad: React.FC<KeypadProps> = ({ onSettingsClick }) => {
   const isPaused = useGameStore((state) => state.isPaused);
   const isZenMode = useGameStore((state) => state.isZenMode);
 
+  const selectedCell = primaryIndex !== null ? grid[primaryIndex] : null;
+  const selectedCellNotes = (selectedCell && selectedCell.value === null) ? selectedCell.notes : [];
+
   const getDigitCount = (num: number) => {
     return grid.filter(cell => cell.value === num).length;
   };
@@ -50,6 +53,8 @@ export const Keypad: React.FC<KeypadProps> = ({ onSettingsClick }) => {
         {[1, 2, 3, 4, 5].map((num) => {
           const count = getDigitCount(num);
           const percentage = (Math.min(count, 9) / 9) * 100;
+          const isNoteInSelected = selectedCellNotes.includes(num);
+
           return (
             <button
               key={num}
@@ -57,7 +62,9 @@ export const Keypad: React.FC<KeypadProps> = ({ onSettingsClick }) => {
               onClick={() => handleNumberClick(num)}
               disabled={isPaused}
               style={{
-                background: isZenMode ? '#ffffff' : `conic-gradient(#e5e5e5 ${percentage}%, #ffffff 0)`
+                background: isZenMode ? '#ffffff' : `conic-gradient(#e5e5e5 ${percentage}%, #ffffff 0)`,
+                border: isNoteInSelected ? '2.5px solid var(--primary-bg)' : undefined,
+                boxShadow: isNoteInSelected ? '0 0 2px var(--primary-bg)' : undefined
               }}
             >
               <span className="digit-label">{num}</span>
@@ -78,6 +85,8 @@ export const Keypad: React.FC<KeypadProps> = ({ onSettingsClick }) => {
         {[6, 7, 8, 9].map((num) => {
           const count = getDigitCount(num);
           const percentage = (Math.min(count, 9) / 9) * 100;
+          const isNoteInSelected = selectedCellNotes.includes(num);
+
           return (
             <button
               key={num}
@@ -85,7 +94,9 @@ export const Keypad: React.FC<KeypadProps> = ({ onSettingsClick }) => {
               onClick={() => handleNumberClick(num)}
               disabled={isPaused}
               style={{
-                background: isZenMode ? '#ffffff' : `conic-gradient(#e5e5e5 ${percentage}%, #ffffff 0)`
+                background: isZenMode ? '#ffffff' : `conic-gradient(#e5e5e5 ${percentage}%, #ffffff 0)`,
+                border: isNoteInSelected ? '2.5px solid var(--primary-bg)' : undefined,
+                boxShadow: isNoteInSelected ? '0 0 2px var(--primary-bg)' : undefined
               }}
             >
               <span className="digit-label">{num}</span>
